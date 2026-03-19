@@ -197,6 +197,70 @@
     .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px; }
     .footer-bottom a { color: var(--cta); text-decoration: none; }
 
+    /* AGENT LEVELS LADDER */
+    .levels-ladder { display: flex; flex-direction: column; gap: 0; margin: 36px 0; }
+    .level-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 0 24px; align-items: stretch; }
+    .level-line { display: flex; flex-direction: column; align-items: center; }
+    .level-num { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; flex-shrink: 0; border: 2px solid; }
+    .level-connector { width: 2px; flex: 1; min-height: 20px; }
+    .level-body { padding: 0 0 28px; }
+    .level-body h4 { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+    .level-body p { font-size: 14px; color: #666; line-height: 1.6; margin: 0; }
+    .level-tag { align-self: start; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; margin-top: 10px; }
+    .level-1 .level-num { background: rgba(196,183,166,0.2); border-color: var(--ui); color: #888; }
+    .level-1 .level-connector { background: linear-gradient(var(--ui), rgba(200,107,69,0.3)); }
+    .level-1 .level-tag { background: rgba(196,183,166,0.2); color: #888; }
+    .level-2 .level-num { background: rgba(200,107,69,0.1); border-color: rgba(200,107,69,0.5); color: var(--cta); }
+    .level-2 .level-connector { background: linear-gradient(rgba(200,107,69,0.4), rgba(200,107,69,0.6)); }
+    .level-2 .level-tag { background: rgba(200,107,69,0.1); color: var(--cta); }
+    .level-3 .level-num { background: rgba(200,107,69,0.2); border-color: var(--cta); color: var(--cta); }
+    .level-3 .level-connector { background: linear-gradient(rgba(200,107,69,0.6), var(--cta)); }
+    .level-3 .level-tag { background: rgba(200,107,69,0.2); color: var(--cta-dark); }
+    .level-4 .level-num { background: var(--cta); border-color: var(--cta); color: #fff; }
+    .level-4 .level-tag { background: var(--cta); color: #fff; }
+
+    /* AGENT EXPLAINER */
+    .agent-flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0; margin: 36px 0; align-items: center; }
+    .agent-step { text-align: center; padding: 20px 12px; }
+    .agent-step .as-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 12px; }
+    .agent-step h5 { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+    .agent-step p { font-size: 12px; color: #777; line-height: 1.5; }
+    .agent-arrow { text-align: center; font-size: 22px; color: var(--cta); font-weight: 900; padding: 0 4px; }
+    .chatbot-flow .agent-step .as-icon { background: rgba(196,183,166,0.2); }
+    .agent-flow-real .agent-step .as-icon { background: rgba(200,107,69,0.1); }
+    .flow-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+    .flow-box { border-radius: 16px; padding: 24px 20px; margin-bottom: 16px; }
+    .flow-box-grey { background: rgba(196,183,166,0.12); border: 1px solid rgba(196,183,166,0.3); }
+    .flow-box-warm { background: rgba(200,107,69,0.07); border: 1px solid rgba(200,107,69,0.2); }
+
+    /* FCO BUILDS */
+    .builds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 36px; }
+    .build-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px 24px; }
+    .build-card:hover { background: rgba(200,107,69,0.12); border-color: rgba(200,107,69,0.35); }
+    .build-trigger { font-size: 11px; font-weight: 700; color: var(--cta); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .build-card h4 { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .build-card p { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 14px; }
+    .build-steps { display: flex; flex-direction: column; gap: 6px; }
+    .build-step { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.7); }
+    .build-step-num { width: 20px; height: 20px; border-radius: 50%; background: rgba(200,107,69,0.3); color: var(--cta); font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+    /* RESPONSIBLE USE */
+    .responsible-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 36px; }
+    .resp-card { border-radius: 16px; padding: 28px 24px; }
+    .resp-card.do { background: rgba(74,222,128,0.07); border: 1px solid rgba(74,222,128,0.2); }
+    .resp-card.dont { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); }
+    .resp-card.caution { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); }
+    .resp-card .rc-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+    .resp-card.do .rc-label { color: #4ade80; }
+    .resp-card.dont .rc-label { color: #f87171; }
+    .resp-card.caution .rc-label { color: #fbbf24; }
+    .resp-card h4 { font-size: 16px; font-weight: 800; color: var(--dark); margin-bottom: 10px; }
+    .resp-card ul { padding-left: 18px; }
+    .resp-card ul li { font-size: 14px; color: #555; margin-bottom: 6px; line-height: 1.5; }
+    .resp-principle { background: rgba(200,107,69,0.06); border: 1px solid rgba(200,107,69,0.2); border-radius: 16px; padding: 28px 32px; margin-top: 28px; }
+    .resp-principle h4 { font-size: 16px; font-weight: 800; color: var(--dark); margin-bottom: 10px; }
+    .resp-principle p { font-size: 15px; color: #555; line-height: 1.7; }
+
     /* SCROLL TO TOP */
     #scrolltop { position: fixed; bottom: 28px; right: 28px; width: 44px; height: 44px; background: var(--cta); color: #fff; border: none; border-radius: 50%; font-size: 18px; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(200,107,69,0.4); z-index: 100; transition: all 0.2s; }
     #scrolltop:hover { background: var(--cta-dark); transform: translateY(-2px); }
@@ -231,6 +295,8 @@
       <li><a href="#how-to-start">How to Start</a></li>
       <li><a href="#software-guide">Software Guide</a></li>
       <li><a href="#build-your-agent">Build an Agent</a></li>
+      <li><a href="#ai-levels">AI Levels</a></li>
+      <li><a href="#responsible-use">Responsible Use</a></li>
       <li><a href="#toolkit">All Tools</a></li>
       <li><a href="demo.html" style="color:#C86B45;font-weight:700;">▶ Live Demo</a></li>
       <li><a href="https://www.firstclassoperations.co.uk/contact" target="_blank" class="nav-cta">Hire Us →</a></li>
@@ -749,6 +815,227 @@ For every task, you will deliver: [list of outputs]
   <div class="callout" style="margin-top:28px;">
     <div class="callout-icon">🎯</div>
     <div class="callout-body"><strong>The FCO recommendation:</strong> Use Claude for everything that requires thinking, writing, and working with your data. Use Gemini for image generation. Use Grok for real-time news and social intelligence. These three tools cover 95% of what a modern founder needs.</div>
+  </div>
+</section>
+
+<!-- ===== 7A. WHAT IS AN AGENT ===== -->
+<section class="section fade-in" id="what-is-agent">
+  <div class="label">07A · Understanding Agents</div>
+  <h2>What You're Seeing vs. What an Agent Actually Is</h2>
+  <p class="intro">The demo on this site shows Claude responding to instructions in real time. That's powerful — but it's not an agent. Here's the honest difference, and why it matters for your business.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:36px 0;">
+    <div class="flow-box flow-box-grey">
+      <div class="flow-label" style="color:#888;">What You're Seeing: A Smart Assistant</div>
+      <div class="agent-flow chatbot-flow" style="grid-template-columns:repeat(3,1fr) auto repeat(3,1fr);">
+        <div class="agent-step"><div class="as-icon">🧑</div><h5>You Ask</h5><p>You type a question or task</p></div>
+        <div class="agent-arrow">→</div>
+        <div class="agent-step"><div class="as-icon">🤖</div><h5>Claude Responds</h5><p>Produces text, a document, or an answer</p></div>
+        <div class="agent-arrow">→</div>
+        <div class="agent-step"><div class="as-icon">🧑</div><h5>You Act</h5><p>You copy, paste, send, or use the output</p></div>
+      </div>
+      <p style="font-size:13px;color:#888;margin-top:8px;">Powerful. Saves hours. But you're still in the loop for every step.</p>
+    </div>
+    <div class="flow-box flow-box-warm">
+      <div class="flow-label" style="color:var(--cta);">A True Agent: Claude Acting on Your Behalf</div>
+      <div class="agent-flow agent-flow-real" style="grid-template-columns:repeat(5,1fr) auto;">
+        <div class="agent-step"><div class="as-icon">⚡</div><h5>Trigger</h5><p>Event, schedule, or data change</p></div>
+        <div class="agent-arrow">→</div>
+        <div class="agent-step"><div class="as-icon">🧠</div><h5>Plan</h5><p>Claude decides what to do</p></div>
+        <div class="agent-arrow">→</div>
+        <div class="agent-step"><div class="as-icon">🔧</div><h5>Act</h5><p>Connects to tools, sends emails, updates CRM</p></div>
+        <div class="agent-arrow">→</div>
+        <div class="agent-step"><div class="as-icon">🔄</div><h5>Loop</h5><p>Checks result, self-corrects if needed</p></div>
+        <div class="agent-arrow">→</div>
+        <div class="agent-step"><div class="as-icon">📋</div><h5>Report</h5><p>Tells you what it did and flags anything needing approval</p></div>
+      </div>
+      <p style="font-size:13px;color:var(--cta);margin-top:8px;font-weight:600;">This runs while you sleep. You review outcomes, not tasks.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>The honest summary:</strong> What you're seeing in the demo is Level 2 — Claude with context, doing real work when you ask. A true agent is Level 4 — Claude connected to your tools, running on triggers, acting without you asking. Both are valuable. The demo shows you what's possible. FCO builds the version that runs your business.</div>
+  </div>
+</section>
+
+<!-- ===== 7B. LEVELS OF AI ===== -->
+<section class="section section-muted fade-in" id="ai-levels">
+  <div class="label">07B · Your AI Journey</div>
+  <h2>The Four Levels of AI in Your Business</h2>
+  <p class="intro">Most founders are stuck at Level 1. Here's what each level looks like — and what it takes to move up.</p>
+
+  <div class="levels-ladder">
+    <div class="level-row level-1">
+      <div class="level-line"><div class="level-num">1</div><div class="level-connector"></div></div>
+      <div class="level-body">
+        <h4>The Chatbot User</h4>
+        <p>You open ChatGPT or Claude, type a question, get an answer, close the tab. You treat AI like a smarter Google. Results feel generic. You rewrite most of what it produces. You have a folder of saved prompts you never open.</p>
+        <p style="margin-top:8px;font-size:13px;color:#999;"><strong>Where most people are.</strong> Better than nothing — but you're leaving 90% of the value on the table.</p>
+      </div>
+      <div class="level-tag">Most Founders</div>
+    </div>
+    <div class="level-row level-2">
+      <div class="level-line"><div class="level-num">2</div><div class="level-connector"></div></div>
+      <div class="level-body">
+        <h4>The Context-Aware Assistant</h4>
+        <p>You've built your MD files. Claude knows your business, your voice, your clients. You start every chat with your context files loaded. Outputs sound like you. You stop rewriting. This is what this guide teaches — and what the demo on this site demonstrates.</p>
+        <p style="margin-top:8px;font-size:13px;color:#999;"><strong>Where you'll be after this guide.</strong> 3–5 hours saved per week. Outputs that are actually usable.</p>
+      </div>
+      <div class="level-tag">This Guide Gets You Here</div>
+    </div>
+    <div class="level-row level-3">
+      <div class="level-line"><div class="level-num">3</div><div class="level-connector"></div></div>
+      <div class="level-body">
+        <h4>The Automated Workflow</h4>
+        <p>Claude is connected to your tools via Zapier or Make. A new lead fills in a form — Claude drafts the proposal automatically. A meeting ends — Claude writes the follow-up email and logs it in your CRM. You've removed yourself from repetitive tasks entirely. You review outputs, you don't create them.</p>
+        <p style="margin-top:8px;font-size:13px;color:#999;"><strong>Where FCO takes you.</strong> 10–20 hours saved per week. Your team focuses on work that actually needs humans.</p>
+      </div>
+      <div class="level-tag">FCO Builds This</div>
+    </div>
+    <div class="level-row level-4">
+      <div class="level-line"><div class="level-num">4</div></div>
+      <div class="level-body">
+        <h4>The True Agent</h4>
+        <p>Multiple Claude agents working in parallel, each with a specific role. One monitors your pipeline and flags at-risk deals. One tracks your team's workload and surfaces bottlenecks. One reads your inbox every morning and prepares a briefing. They communicate with each other, escalate to you only when needed, and run your operations in the background 24/7.</p>
+        <p style="margin-top:8px;font-size:13px;color:#999;"><strong>The frontier.</strong> This is where AI stops being a tool and starts being a team member.</p>
+      </div>
+      <div class="level-tag" style="background:var(--cta);color:#fff;">The Frontier</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:8px;">
+    <a href="https://www.firstclassoperations.co.uk/contact" target="_blank" class="btn btn-primary">Find out which level your business is at →</a>
+  </div>
+</section>
+
+<!-- ===== 7C. WHAT FCO BUILDS ===== -->
+<section class="section section-dark fade-in" id="fco-builds">
+  <div class="label" style="color:rgba(255,255,255,0.5);">07C · What We Build</div>
+  <h2 style="color:#fff;">Real Agentic Workflows FCO Has Built</h2>
+  <p class="intro" style="color:rgba(255,255,255,0.7);">These are not demos. These are live systems running inside real businesses right now. Each one started with a founder saying "I spend too much time on this."</p>
+
+  <div class="builds-grid">
+    <div class="build-card">
+      <div class="build-trigger">Trigger: New lead submits enquiry form</div>
+      <h4>The Auto-Proposal System</h4>
+      <p>A new enquiry comes in. Within 4 minutes, a personalised proposal is drafted, formatted, and sitting in the founder's drafts folder ready to review and send.</p>
+      <div class="build-steps">
+        <div class="build-step"><div class="build-step-num">1</div>Form submission captured by Zapier</div>
+        <div class="build-step"><div class="build-step-num">2</div>Claude reads the enquiry + client's industry context</div>
+        <div class="build-step"><div class="build-step-num">3</div>Proposal drafted using the business's voice profile and pricing</div>
+        <div class="build-step"><div class="build-step-num">4</div>Saved to Google Drive + email draft created</div>
+        <div class="build-step"><div class="build-step-num">5</div>Founder reviews, edits 2 lines, hits send</div>
+      </div>
+    </div>
+    <div class="build-card">
+      <div class="build-trigger">Trigger: Every Monday at 7am</div>
+      <h4>The Weekly Business Brief</h4>
+      <p>Every Monday morning, the founder opens their inbox to find a structured briefing: what happened last week, what needs attention this week, and three priorities ranked by impact.</p>
+      <div class="build-steps">
+        <div class="build-step"><div class="build-step-num">1</div>Claude pulls data from CRM, project tool, and calendar</div>
+        <div class="build-step"><div class="build-step-num">2</div>Identifies open tasks, overdue items, upcoming deadlines</div>
+        <div class="build-step"><div class="build-step-num">3</div>Drafts a structured briefing in the founder's preferred format</div>
+        <div class="build-step"><div class="build-step-num">4</div>Emails it at 7am every Monday — no action required</div>
+      </div>
+    </div>
+    <div class="build-card">
+      <div class="build-trigger">Trigger: Meeting ends (calendar event closes)</div>
+      <h4>The Post-Meeting Action System</h4>
+      <p>The moment a client meeting ends, Claude reads the transcript, extracts action items, drafts the follow-up email, and logs everything in the CRM. The account manager reviews and approves in 90 seconds.</p>
+      <div class="build-steps">
+        <div class="build-step"><div class="build-step-num">1</div>Fathom or Otter transcribes the meeting automatically</div>
+        <div class="build-step"><div class="build-step-num">2</div>Claude reads transcript, extracts decisions and actions</div>
+        <div class="build-step"><div class="build-step-num">3</div>Follow-up email drafted in the account manager's voice</div>
+        <div class="build-step"><div class="build-step-num">4</div>CRM updated, tasks created in project management tool</div>
+      </div>
+    </div>
+    <div class="build-card">
+      <div class="build-trigger">Trigger: Invoice goes 14 days overdue</div>
+      <h4>The Payment Chase Sequence</h4>
+      <p>Chasing payments is awkward and time-consuming. This system handles the entire sequence — from gentle reminder to firm final notice — in the business's voice, escalating only when a human decision is needed.</p>
+      <div class="build-steps">
+        <div class="build-step"><div class="build-step-num">1</div>Xero or QuickBooks flags invoice as overdue</div>
+        <div class="build-step"><div class="build-step-num">2</div>Day 14: Claude drafts and sends a warm reminder</div>
+        <div class="build-step"><div class="build-step-num">3</div>Day 21: Firmer follow-up, references previous email</div>
+        <div class="build-step"><div class="build-step-num">4</div>Day 30: Escalation email flagged for founder approval before sending</div>
+      </div>
+    </div>
+    <div class="build-card">
+      <div class="build-trigger">Trigger: New client contract signed</div>
+      <h4>The Client Onboarding Engine</h4>
+      <p>The moment a contract is signed, the entire onboarding sequence kicks off automatically — welcome email, folder creation, briefing document, first check-in scheduled. The team shows up to the kickoff call with everything already done.</p>
+      <div class="build-steps">
+        <div class="build-step"><div class="build-step-num">1</div>Contract signed in DocuSign / PandaDoc</div>
+        <div class="build-step"><div class="build-step-num">2</div>Welcome email sent, onboarding form triggered</div>
+        <div class="build-step"><div class="build-step-num">3</div>Google Drive folder created with all templates pre-loaded</div>
+        <div class="build-step"><div class="build-step-num">4</div>Kickoff call scheduled, briefing document drafted</div>
+        <div class="build-step"><div class="build-step-num">5</div>Team notified with full client context</div>
+      </div>
+    </div>
+    <div class="build-card" style="border-color:rgba(200,107,69,0.4);background:rgba(200,107,69,0.08);">
+      <div class="build-trigger" style="color:rgba(255,255,255,0.6);">Your Business</div>
+      <h4>What Would We Build for You?</h4>
+      <p>Every business has a different bottleneck. We start with a 30-minute call to identify where you're losing the most time — then design the system that fixes it.</p>
+      <div style="margin-top:20px;">
+        <a href="https://www.firstclassoperations.co.uk/contact" target="_blank" class="btn btn-primary" style="width:100%;text-align:center;display:block;">Book a Free Discovery Call →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7D. RESPONSIBLE USE ===== -->
+<section class="section fade-in" id="responsible-use">
+  <div class="label">07D · Responsible Use</div>
+  <h2>Using Claude Responsibly</h2>
+  <p class="intro">AI is a powerful tool. Like any powerful tool, how you use it matters. Here's a clear, honest framework for using Claude in a way that serves your business — and your clients — well.</p>
+
+  <div class="responsible-grid">
+    <div class="resp-card do">
+      <div class="rc-label">✓ Do This</div>
+      <h4>Use AI to amplify your expertise</h4>
+      <ul>
+        <li>Use Claude to draft — then review, edit, and own the output</li>
+        <li>Load your own knowledge and experience as context files</li>
+        <li>Use AI for the repetitive parts so you can focus on the parts that need you</li>
+        <li>Tell clients when AI has assisted in producing work, where relevant</li>
+        <li>Fact-check any statistics, figures, or claims Claude produces</li>
+        <li>Use Claude to think through problems — not to replace your judgment</li>
+      </ul>
+    </div>
+    <div class="resp-card dont">
+      <div class="rc-label">✗ Avoid This</div>
+      <h4>Don't outsource your judgment</h4>
+      <ul>
+        <li>Don't send AI-generated content without reading it first</li>
+        <li>Don't share confidential client data with AI tools without checking your data agreements</li>
+        <li>Don't use AI to produce work in someone else's name without their knowledge</li>
+        <li>Don't rely on Claude for legal, medical, or financial advice — it can assist, not advise</li>
+        <li>Don't assume Claude is always right — it can be confidently wrong</li>
+        <li>Don't automate decisions that require human empathy or accountability</li>
+      </ul>
+    </div>
+    <div class="resp-card caution">
+      <div class="rc-label">⚠ Handle With Care</div>
+      <h4>Grey areas to navigate thoughtfully</h4>
+      <ul>
+        <li>Client communications: AI-assisted is fine; AI-only without review is risky</li>
+        <li>Personal data: GDPR applies — don't upload identifiable client data to third-party AI tools without a data processing agreement</li>
+        <li>Creative work: AI can assist but the creative direction should be yours</li>
+        <li>Sensitive conversations: redundancy, complaints, difficult feedback — keep humans in the loop</li>
+        <li>Public-facing content: always review before publishing, especially anything factual</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="resp-principle">
+    <h4>The FCO Principle on AI</h4>
+    <p>AI should make you more capable, not less accountable. The goal is not to remove humans from the loop — it's to remove humans from the parts of the loop that don't need them. Your judgment, your relationships, your expertise: these are irreplaceable. Claude handles the volume. You handle the value.</p>
+  </div>
+
+  <div class="callout" style="margin-top:28px;">
+    <div class="callout-icon">🔒</div>
+    <div class="callout-body"><strong>On data privacy:</strong> Claude Pro and Claude for Work both have options to opt out of training data usage. For client work, use Claude for Work (Teams or Enterprise plan) which includes a data processing agreement and guarantees your conversations are not used to train models. Check Anthropic's current privacy policy at <a href="https://www.anthropic.com/privacy" target="_blank" style="color:var(--cta);">anthropic.com/privacy</a> before uploading sensitive business data.</div>
   </div>
 </section>
 
