@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Claude Demo | First Class Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F6F5F2;
+      --dark: #2F2E2D;
+      --darker: #1a1918;
+      --cta: #C86B45;
+      --cta-dark: #b85a3a;
+      --ui: #C4B7A6;
+      --white: #fff;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: 'Barlow', sans-serif; background: var(--darker); color: var(--dark); display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ── KEYNOTE HEADER ── */
+    header {
+      background: var(--darker);
+      border-bottom: 2px solid var(--cta);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+    .logo-area { display: flex; align-items: center; gap: 16px; }
+    .logo-area img { height: 34px; filter: brightness(0) invert(1); }
+    .demo-badge {
+      background: var(--cta);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .live-indicator { display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; }
+    .live-dot { width: 9px; height: 9px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.9)} }
+    .hire-btn {
+      background: var(--cta);
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .hire-btn:hover { background: var(--cta-dark); }
+
+    /* ── MAIN LAYOUT ── */
+    .main { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── DEMO SCENARIOS PANEL ── */
+    .scenarios {
+      width: 320px;
+      background: #222120;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+    .scenarios-head {
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .scenarios-head h3 { font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .scenarios-head p { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.4; }
+
+    .scenario-group { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .scenario-group h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cta); margin-bottom: 10px; }
+
+    .scenario-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 12px 12px;
+      cursor: pointer;
+      margin-bottom: 7px;
+      transition: all 0.2s;
+      font-family: 'Barlow', sans-serif;
+      color: rgba(255,255,255,0.85);
+    }
+    .scenario-btn:hover {
+      background: rgba(200,107,69,0.15);
+      border-color: rgba(200,107,69,0.4);
+      color: #fff;
+    }
+    .scenario-btn.active {
+      background: rgba(200,107,69,0.2);
+      border-color: var(--cta);
+      color: #fff;
+    }
+    .sb-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .sb-text {}
+    .sb-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; line-height: 1.3; }
+    .sb-sub { font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.4; }
+
+    .custom-section { padding: 14px 16px 18px; }
+    .custom-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cta); margin-bottom: 10px; }
+    .custom-input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      color: #fff;
+      outline: none;
+      resize: none;
+      min-height: 72px;
+      transition: border-color 0.2s;
+      margin-bottom: 8px;
+    }
+    .custom-input:focus { border-color: var(--cta); }
+    .custom-input::placeholder { color: rgba(255,255,255,0.25); }
+    .run-btn {
+      width: 100%;
+      background: var(--cta);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .run-btn:hover { background: var(--cta-dark); }
+    .run-btn:disabled { background: rgba(200,107,69,0.3); cursor: not-allowed; }
+
+    /* ── DEMO STAGE ── */
+    .stage { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+
+    /* Stage header */
+    .stage-head {
+      background: var(--white);
+      border-bottom: 1px solid rgba(196,183,166,0.3);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .stage-icon { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--cta), var(--cta-dark)); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .stage-info h4 { font-size: 16px; font-weight: 800; color: var(--dark); margin-bottom: 2px; }
+    .stage-info p { font-size: 12px; color: #888; }
+    .stage-actions { margin-left: auto; display: flex; gap: 8px; }
+    .stage-btn { background: none; border: 1px solid rgba(196,183,166,0.4); border-radius: 8px; padding: 7px 14px; font-size: 12px; font-family: 'Barlow', sans-serif; color: #666; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+    .stage-btn:hover { background: var(--bg); border-color: var(--ui); }
+    .stage-btn.primary { background: var(--cta); color: #fff; border-color: var(--cta); }
+    .stage-btn.primary:hover { background: var(--cta-dark); }
+
+    /* Messages */
+    .messages { flex: 1; overflow-y: auto; padding: 28px; display: flex; flex-direction: column; gap: 20px; }
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-thumb { background: var(--ui); border-radius: 2px; }
+
+    /* Welcome */
+    .welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; padding: 40px; min-height: 400px; }
+    .welcome-logo { width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, var(--cta), var(--cta-dark)); display: flex; align-items: center; justify-content: center; font-size: 36px; margin-bottom: 24px; box-shadow: 0 20px 40px rgba(200,107,69,0.3); }
+    .welcome h2 { font-size: 28px; font-weight: 900; color: var(--dark); margin-bottom: 10px; }
+    .welcome p { font-size: 16px; color: #777; max-width: 500px; line-height: 1.6; margin-bottom: 32px; }
+    .welcome-hint { font-size: 14px; color: var(--cta); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .arrow { font-size: 20px; animation: bounce-left 1.5s infinite; }
+    @keyframes bounce-left { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-6px)} }
+
+    /* Messages */
+    .msg { display: flex; gap: 12px; max-width: 88%; animation: fadeIn 0.35s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+    .msg-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+    .msg.agent .msg-av { background: linear-gradient(135deg, var(--cta), var(--cta-dark)); }
+    .msg.user .msg-av { background: var(--dark); color: #fff; font-size: 11px; font-weight: 800; }
+    .msg-body {}
+    .bubble { padding: 14px 18px; border-radius: 16px; font-size: 15px; line-height: 1.7; }
+    .msg.agent .bubble { background: var(--white); border: 1px solid rgba(0,0,0,0.07); border-bottom-left-radius: 4px; color: var(--dark); box-shadow: 0 3px 12px rgba(0,0,0,0.07); }
+    .msg.user .bubble { background: var(--dark); color: #fff; border-bottom-right-radius: 4px; }
+    .bubble strong { font-weight: 700; color: var(--cta); }
+    .msg.user .bubble strong { color: rgba(200,107,69,0.9); }
+    .bubble h3 { font-size: 16px; font-weight: 800; margin: 14px 0 6px; color: var(--dark); }
+    .bubble h3:first-child { margin-top: 0; }
+    .bubble h4 { font-size: 14px; font-weight: 700; margin: 12px 0 5px; color: var(--dark); }
+    .bubble h4:first-child { margin-top: 0; }
+    .bubble p { margin-bottom: 8px; }
+    .bubble p:last-child { margin-bottom: 0; }
+    .bubble ul, .bubble ol { padding-left: 20px; margin: 8px 0; }
+    .bubble li { margin-bottom: 5px; }
+    .bubble code { background: rgba(200,107,69,0.1); color: var(--cta); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; }
+    .bubble pre { background: var(--darker); color: #f6f5f2; padding: 14px 16px; border-radius: 10px; font-size: 13px; overflow-x: auto; margin: 10px 0; line-height: 1.6; white-space: pre-wrap; border-left: 3px solid var(--cta); }
+    .bubble blockquote { border-left: 3px solid var(--cta); padding-left: 14px; color: #666; margin: 10px 0; font-style: italic; }
+    .bubble hr { border: none; border-top: 1px solid rgba(196,183,166,0.3); margin: 12px 0; }
+    .msg-time { font-size: 11px; color: #aaa; margin-top: 5px; }
+    .msg.user .msg-time { text-align: right; }
+
+    /* Typing */
+    .typing { display: flex; gap: 12px; max-width: 88%; animation: fadeIn 0.3s ease; }
+    .typing-dots { background: var(--white); border: 1px solid rgba(0,0,0,0.07); border-radius: 16px; border-bottom-left-radius: 4px; padding: 16px 20px; display: flex; gap: 5px; align-items: center; box-shadow: 0 3px 12px rgba(0,0,0,0.07); }
+    .typing-dots span { width: 7px; height: 7px; background: var(--ui); border-radius: 50%; animation: bounce 1.2s infinite; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-7px)} }
+
+    /* Task label */
+    .task-label { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(200,107,69,0.08); border-radius: 8px; font-size: 12px; font-weight: 700; color: var(--cta); margin-bottom: 4px; width: fit-content; }
+    .task-label .tl-icon { font-size: 14px; }
+
+    /* Input area */
+    .input-area { background: var(--white); border-top: 1px solid rgba(196,183,166,0.3); padding: 16px 28px; flex-shrink: 0; }
+    .input-row { display: flex; gap: 10px; align-items: flex-end; background: var(--bg); border: 2px solid rgba(0,0,0,0.1); border-radius: 14px; padding: 10px 14px; transition: border-color 0.2s; }
+    .input-row:focus-within { border-color: var(--cta); }
+    #inp { flex: 1; background: none; border: none; outline: none; font-family: 'Barlow', sans-serif; font-size: 15px; color: var(--dark); resize: none; max-height: 120px; line-height: 1.5; }
+    #inp::placeholder { color: #aaa; }
+    .sbtn { width: 40px; height: 40px; background: var(--cta); border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; color: #fff; font-size: 17px; }
+    .sbtn:hover { background: var(--cta-dark); transform: scale(1.05); }
+    .sbtn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+    .hint { font-size: 11px; color: #aaa; margin-top: 7px; text-align: center; }
+
+    /* Keynote footer bar */
+    .keynote-bar {
+      background: var(--darker);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .kb-url { font-size: 13px; color: rgba(255,255,255,0.5); font-family: monospace; }
+    .kb-url span { color: var(--cta); font-weight: 700; }
+    .kb-cta { font-size: 13px; color: rgba(255,255,255,0.7); }
+    .kb-cta a { color: var(--cta); text-decoration: none; font-weight: 700; }
+
+    @media (max-width: 900px) { .scenarios { display: none; } }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-area">
+    <img src="fco_logo.png" alt="First Class Operations" />
+    <span class="demo-badge">Live Demo</span>
+  </div>
+  <div class="header-right">
+    <div class="live-indicator"><span class="live-dot"></span> Claude Agent Online</div>
+    <a href="index.html" style="color:rgba(255,255,255,0.5);text-decoration:none;font-size:13px;">← Guide</a>
+    <a href="https://www.firstclassoperations.co.uk/contact" target="_blank" class="hire-btn">Hire Us →</a>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- SCENARIOS PANEL -->
+  <div class="scenarios">
+    <div class="scenarios-head">
+      <h3>Live Demos</h3>
+      <p>Click any scenario to watch Claude execute it live on stage</p>
+    </div>
+
+    <div class="scenario-group">
+      <h4>Business Writing</h4>
+      <button class="scenario-btn" onclick="runScenario(this, 'proposal')">
+        <span class="sb-icon">📝</span>
+        <div class="sb-text">
+          <div class="sb-title">Write a Client Proposal</div>
+          <div class="sb-sub">Watch Claude ask smart questions then produce a full proposal</div>
+        </div>
+      </button>
+      <button class="scenario-btn" onclick="runScenario(this, 'email')">
+        <span class="sb-icon">📧</span>
+        <div class="sb-text">
+          <div class="sb-title">Draft a Difficult Email</div>
+          <div class="sb-sub">Chasing payment, delivering bad news, or handling a complaint</div>
+        </div>
+      </button>
+      <button class="scenario-btn" onclick="runScenario(this, 'linkedin')">
+        <span class="sb-icon">📣</span>
+        <div class="sb-text">
+          <div class="sb-title">Write a LinkedIn Post</div>
+          <div class="sb-sub">Thought leadership content that sounds like a real person</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="scenario-group">
+      <h4>Operations & Planning</h4>
+      <button class="scenario-btn" onclick="runScenario(this, 'sop')">
+        <span class="sb-icon">📋</span>
+        <div class="sb-text">
+          <div class="sb-title">Build a Complete SOP</div>
+          <div class="sb-sub">Standard Operating Procedure for any business process</div>
+        </div>
+      </button>
+      <button class="scenario-btn" onclick="runScenario(this, 'plan90')">
+        <span class="sb-icon">📈</span>
+        <div class="sb-text">
+          <div class="sb-title">90-Day Growth Plan</div>
+          <div class="sb-sub">Structured plan with milestones, actions, and KPIs</div>
+        </div>
+      </button>
+      <button class="scenario-btn" onclick="runScenario(this, 'audit')">
+        <span class="sb-icon">🔍</span>
+        <div class="sb-text">
+          <div class="sb-title">AI Opportunity Audit</div>
+          <div class="sb-sub">Where in your business can Claude save the most time?</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="scenario-group">
+      <h4>Claude Setup</h4>
+      <button class="scenario-btn" onclick="runScenario(this, 'cowork')">
+        <span class="sb-icon">💻</span>
+        <div class="sb-text">
+          <div class="sb-title">How to Set Up Cowork</div>
+          <div class="sb-sub">Step-by-step from download to first output</div>
+        </div>
+      </button>
+      <button class="scenario-btn" onclick="runScenario(this, 'mdfile')">
+        <span class="sb-icon">📄</span>
+        <div class="sb-text">
+          <div class="sb-title">Build Your First MD File</div>
+          <div class="sb-sub">Create the about.md file that makes Claude sound like you</div>
+        </div>
+      </button>
+      <button class="scenario-btn" onclick="runScenario(this, 'excel')">
+        <span class="sb-icon">📊</span>
+        <div class="sb-text">
+          <div class="sb-title">Claude in Excel</div>
+          <div class="sb-sub">Install Claude inside your spreadsheets in 3 minutes</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="custom-section">
+      <h4>Custom Demo</h4>
+      <textarea class="custom-input" id="customInput" placeholder="Type any task or question to demo live..."></textarea>
+      <button class="run-btn" id="runCustom" onclick="runCustom()">Run Live Demo →</button>
+    </div>
+  </div>
+
+  <!-- STAGE -->
+  <div class="stage">
+    <div class="stage-head">
+      <div class="stage-icon" id="stageIcon">🤖</div>
+      <div class="stage-info">
+        <h4 id="stageTitle">FCO Claude Demo</h4>
+        <p id="stageSubtitle">Select a scenario on the left to begin the live demonstration</p>
+      </div>
+      <div class="stage-actions">
+        <button class="stage-btn" onclick="clearDemo()">Reset</button>
+        <button class="stage-btn" onclick="window.print()">Print</button>
+        <a href="chat-agent.html" class="stage-btn primary" style="text-decoration:none;display:inline-flex;align-items:center;">Try It Yourself →</a>
+      </div>
+    </div>
+
+    <div class="messages" id="msgs">
+      <div class="welcome" id="welcome">
+        <div class="welcome-logo">🤖</div>
+        <h2>Claude Co-Work Live Demo</h2>
+        <p>This is a live AI agent powered by the same knowledge base as Claude Co-Work. Select a scenario to watch it execute a real business task in real time — or type your own.</p>
+        <div class="welcome-hint">
+          <span class="arrow">←</span>
+          Pick a scenario to begin
+        </div>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-row">
+        <textarea id="inp" placeholder="Ask a follow-up question or continue the demo..." rows="1" onkeydown="hk(event)" oninput="ar(this)"></textarea>
+        <button class="sbtn" id="sbtn" onclick="sendMsg()">➤</button>
+      </div>
+      <div class="hint">Enter to send · Shift+Enter for new line · This agent is live — everything you see is real AI output</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- KEYNOTE FOOTER -->
+<div class="keynote-bar">
+  <div class="kb-url">Try it: <span>scotland2330.github.io/fco-claude-guide</span></div>
+  <div class="kb-cta">Want this built for your business? <a href="https://www.firstclassoperations.co.uk/contact" target="_blank">Book a free call with FCO →</a></div>
+</div>
+
+<script>
+const API = 'https://8081-iqtpyss5wxucjuet9y5le-6f5676fb.us2.manus.computer/api/chat';
+let history = [];
+let busy = false;
+
+const SCENARIOS = {
+  proposal: {
+    icon: '📝',
+    title: 'Writing a Client Proposal',
+    subtitle: 'Watch Claude ask smart questions then produce a complete proposal',
+    prompt: `I want to write a professional business proposal for a new client so that they sign and move forward with us.
+
+I run a small business consultancy. The client is a 15-person manufacturing company that is struggling with operational inefficiencies and wants help streamlining their processes. The budget is around £8,000-£12,000.
+
+First, ask me 3 clarifying questions using a structured form (like Claude Cowork's AskUserQuestion feature) to make sure you understand what I need. Then produce the full proposal.`
+  },
+  email: {
+    icon: '📧',
+    title: 'Drafting a Difficult Email',
+    subtitle: 'Chasing a late payment professionally without damaging the relationship',
+    prompt: `I need to write an email to a client who is 45 days overdue on a £4,200 invoice. This is the second time they've been late. We want to maintain the relationship — they're a good client when they pay — but we need to be firm.
+
+Write me a professional, direct email that:
+- References the invoice number and amount
+- Notes this is the second late payment
+- Sets a clear deadline (7 days)
+- Keeps the door open for the relationship
+- Doesn't sound passive aggressive or desperate
+
+Make it sound like a real business owner wrote it, not AI.`
+  },
+  linkedin: {
+    icon: '📣',
+    title: 'Writing a LinkedIn Post',
+    subtitle: 'Thought leadership content that sounds like a real person, not AI',
+    prompt: `Write me a LinkedIn post about why most business owners are using AI wrong in 2026.
+
+The angle: They're treating AI like a search engine (ask a question, get an answer) instead of like a team member (give it context, brief it properly, let it do real work).
+
+The post should:
+- Open with something that stops the scroll — not a question, not "In today's world..."
+- Be under 200 words
+- Have short punchy sentences
+- End with a specific action they can take today
+- Sound like a confident, experienced business owner — not a LinkedIn guru
+
+Do NOT use: "game-changer", "leverage", "unlock", "dive in", "it's time to", or any variation of "in today's fast-paced world"`
+  },
+  sop: {
+    icon: '📋',
+    title: 'Building a Complete SOP',
+    subtitle: 'Standard Operating Procedure for client onboarding',
+    prompt: `Build me a complete Standard Operating Procedure (SOP) for onboarding a new client at a marketing agency.
+
+The process starts when a contract is signed and ends when the first piece of work is delivered. The team has: an account manager, a strategist, a designer, and a copywriter.
+
+The SOP should include:
+- A step-by-step process with clear owners for each step
+- Timelines (Day 1, Day 2-3, Week 1, Week 2)
+- What information needs to be collected from the client
+- What internal setup needs to happen (tools, folders, briefings)
+- A checklist at the end
+- Common mistakes to avoid
+
+Format it so it can be saved as a document and handed to any new team member.`
+  },
+  plan90: {
+    icon: '📈',
+    title: '90-Day Growth Plan',
+    subtitle: 'Structured plan with milestones, priorities, and weekly actions',
+    prompt: `Create a 90-day growth plan for a 6-person digital marketing agency that wants to grow from £35k/month to £50k/month in revenue.
+
+Current situation:
+- 8 retainer clients averaging £4,375/month each
+- Services: SEO, paid ads, social media management
+- Team: 1 founder, 1 account manager, 2 strategists, 2 content creators
+- Main bottleneck: the founder is still doing most of the sales
+
+The plan should cover:
+- Month 1: Foundation (what to fix/build first)
+- Month 2: Growth (what to activate)
+- Month 3: Scale (what to optimise)
+- Weekly priorities for each month
+- 3 key KPIs to track
+- The single most important thing to do in the first 7 days
+
+Make it specific and actionable — not generic business advice.`
+  },
+  audit: {
+    icon: '🔍',
+    title: 'AI Opportunity Audit',
+    subtitle: 'Identifying where Claude can save the most time in a real business',
+    prompt: `I run a 12-person accountancy firm. We do bookkeeping, tax returns, management accounts, and payroll for about 80 SME clients.
+
+Do an AI opportunity audit for my business. Tell me:
+1. The 5 highest-value tasks where Claude can save us the most time (be specific — not "admin" but exactly what kind of admin)
+2. For each task: what we'd do in Claude, what the prompt would look like, and how much time it would save per week
+3. The one thing we should implement first and why
+4. What we should NOT try to automate (where human judgment is essential)
+
+Be specific to an accountancy firm — not generic AI advice.`
+  },
+  cowork: {
+    icon: '💻',
+    title: 'How to Set Up Claude Cowork',
+    subtitle: 'Complete step-by-step from download to first real output',
+    prompt: `Give me the complete step-by-step guide to setting up Claude Cowork from scratch.
+
+I'm a business owner, not technical. I've heard about Claude but never used it properly. I want to get from "never used it" to "producing real work outputs" in under 30 minutes.
+
+Cover:
+1. What to download and where
+2. What plan I need and what it costs
+3. How to set up the Cowork tab
+4. What model to select and why
+5. How to set up my first folder with context files
+6. The exact first prompt to use
+7. What I should expect to see happen
+
+Include the actual prompts and commands — not just descriptions of them.`
+  },
+  mdfile: {
+    icon: '📄',
+    title: 'Building Your First MD File',
+    subtitle: 'Create the about.md that makes Claude sound like you, not generic AI',
+    prompt: `Walk me through building my first markdown file (about.md) for Claude.
+
+I'm a business consultant who works with SME founders on operational improvement. I've been in business for 8 years. I'm direct, I hate corporate jargon, and I want Claude to write in my voice — not sound like a LinkedIn post generator.
+
+Show me:
+1. What an about.md file actually looks like (give me a real template I can fill in)
+2. What sections it should have
+3. The most important thing to include that most people miss
+4. How to write the "voice" section — specifically what NOT to say and what to say instead
+5. The exact prompt to use when I start a new Claude chat with this file
+
+Include a complete example about.md I can adapt for myself.`
+  },
+  excel: {
+    icon: '📊',
+    title: 'Claude in Excel',
+    subtitle: 'Install Claude inside your spreadsheets and use it for real work',
+    prompt: `Give me the complete guide to installing and using Claude inside Microsoft Excel.
+
+I use Excel every day for client reports, financial tracking, and project management. I've tried uploading Excel files to ChatGPT before and it never worked properly — the formulas disappeared.
+
+Tell me:
+1. How to install Claude in Excel (exact steps for both Mac and Windows)
+2. What it can actually do that ChatGPT can't
+3. The 5 most useful things to ask Claude once it's inside my spreadsheet
+4. How to build a new spreadsheet from scratch using Claude Cowork (not just fix existing ones)
+5. A real example prompt for building a financial tracking spreadsheet for a service business
+
+Include the actual prompts — not just descriptions.`
+  }
+};
+
+function ar(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
+function hk(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();} }
+function ts() { return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }
+
+function hideWelcome() {
+  const w = document.getElementById('welcome');
+  if (w) w.remove();
+}
+
+function setStageInfo(icon, title, subtitle) {
+  document.getElementById('stageIcon').textContent = icon;
+  document.getElementById('stageTitle').textContent = title;
+  document.getElementById('stageSubtitle').textContent = subtitle;
+}
+
+function addMsg(role, text, label) {
+  hideWelcome();
+  const c = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = `msg ${role}`;
+
+  if (label && role === 'user') {
+    const lbl = document.createElement('div');
+    lbl.className = 'task-label';
+    lbl.innerHTML = `<span class="tl-icon">▶</span> ${label}`;
+    d.appendChild(lbl);
+  }
+
+  const avText = role === 'agent' ? '🤖' : 'You';
+  const body = document.createElement('div');
+  body.className = 'msg-body';
+  body.innerHTML = `<div class="bubble">${fmt(text)}</div><div class="msg-time">${ts()}</div>`;
+  d.appendChild(document.createElement('div')).className = 'msg-av';
+  d.children[d.children.length-1].textContent = avText;
+  d.appendChild(body);
+
+  // Fix order for user messages
+  if (role === 'user') {
+    d.innerHTML = '';
+    if (label) {
+      const lbl = document.createElement('div');
+      lbl.className = 'task-label';
+      lbl.style.marginLeft = 'auto';
+      lbl.innerHTML = `<span class="tl-icon">▶</span> ${label}`;
+      d.appendChild(lbl);
+    }
+    const av = document.createElement('div');
+    av.className = 'msg-av';
+    av.textContent = 'You';
+    const bdy = document.createElement('div');
+    bdy.className = 'msg-body';
+    bdy.innerHTML = `<div class="bubble">${fmt(text)}</div><div class="msg-time" style="text-align:right">${ts()}</div>`;
+    d.appendChild(av);
+    d.appendChild(bdy);
+  }
+
+  c.appendChild(d);
+  c.scrollTop = c.scrollHeight;
+}
+
+function fmt(t) {
+  return t
+    .replace(/```([\s\S]*?)```/g, '<pre>$1</pre>')
+    .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/^#{3} (.+)$/gm, '<h4>$1</h4>')
+    .replace(/^#{2} (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^#{1} (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^---$/gm, '<hr>')
+    .replace(/^[\-\*] (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[\s\S]+?<\/li>)/g, '<ul>$1</ul>')
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+}
+
+function showTyping() {
+  hideWelcome();
+  const c = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = 'typing'; d.id = 'typing';
+  d.innerHTML = `<div class="msg-av" style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cta),var(--cta-dark));display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">🤖</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
+  c.appendChild(d);
+  c.scrollTop = c.scrollHeight;
+}
+function hideTyping() { const t=document.getElementById('typing'); if(t) t.remove(); }
+
+async function callAPI(messages) {
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({messages})
+  });
+  return await res.json();
+}
+
+async function runScenario(btn, key) {
+  if (busy) return;
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const s = SCENARIOS[key];
+  setStageInfo(s.icon, s.title, s.subtitle);
+
+  // Clear and reset
+  history = [];
+  const c = document.getElementById('msgs');
+  c.innerHTML = '';
+
+  busy = true;
+  document.getElementById('sbtn').disabled = true;
+  document.getElementById('runCustom').disabled = true;
+
+  // Show user message
+  const shortPrompt = s.title;
+  addMsg('user', s.prompt, `Demo: ${s.title}`);
+  history.push({role:'user', content: s.prompt});
+  showTyping();
+
+  try {
+    const data = await callAPI(history);
+    hideTyping();
+    if (data.success && data.reply) {
+      addMsg('agent', data.reply);
+      history.push({role:'assistant', content: data.reply});
+    } else {
+      addMsg('agent', 'Connection issue — please try again.');
+    }
+  } catch(e) {
+    hideTyping();
+    addMsg('agent', 'Connection issue — please try again in a moment.');
+  }
+
+  busy = false;
+  document.getElementById('sbtn').disabled = false;
+  document.getElementById('runCustom').disabled = false;
+}
+
+async function runCustom() {
+  const text = document.getElementById('customInput').value.trim();
+  if (!text || busy) return;
+  document.getElementById('customInput').value = '';
+
+  setStageInfo('💬', 'Custom Demo', text.substring(0, 60) + (text.length > 60 ? '...' : ''));
+
+  history = [];
+  const c = document.getElementById('msgs');
+  c.innerHTML = '';
+
+  busy = true;
+  document.getElementById('sbtn').disabled = true;
+  document.getElementById('runCustom').disabled = true;
+
+  addMsg('user', text, 'Custom Demo');
+  history.push({role:'user', content: text});
+  showTyping();
+
+  try {
+    const data = await callAPI(history);
+    hideTyping();
+    if (data.success && data.reply) {
+      addMsg('agent', data.reply);
+      history.push({role:'assistant', content: data.reply});
+    } else {
+      addMsg('agent', 'Connection issue — please try again.');
+    }
+  } catch(e) {
+    hideTyping();
+    addMsg('agent', 'Connection issue — please try again in a moment.');
+  }
+
+  busy = false;
+  document.getElementById('sbtn').disabled = false;
+  document.getElementById('runCustom').disabled = false;
+}
+
+async function sendMsg() {
+  const inp = document.getElementById('inp');
+  const text = inp.value.trim();
+  if (!text || busy) return;
+  inp.value = ''; inp.style.height = 'auto';
+  busy = true;
+  document.getElementById('sbtn').disabled = true;
+
+  addMsg('user', text);
+  history.push({role:'user', content: text});
+  showTyping();
+
+  try {
+    const data = await callAPI(history);
+    hideTyping();
+    if (data.success && data.reply) {
+      addMsg('agent', data.reply);
+      history.push({role:'assistant', content: data.reply});
+    } else {
+      addMsg('agent', 'Connection issue — please try again.');
+    }
+  } catch(e) {
+    hideTyping();
+    addMsg('agent', 'Connection issue — please try again.');
+  }
+
+  busy = false;
+  document.getElementById('sbtn').disabled = false;
+  document.getElementById('inp').focus();
+}
+
+function clearDemo() {
+  history = [];
+  const c = document.getElementById('msgs');
+  c.innerHTML = `
+    <div class="welcome" id="welcome">
+      <div class="welcome-logo">🤖</div>
+      <h2>Claude Co-Work Live Demo</h2>
+      <p>This is a live AI agent powered by the same knowledge base as Claude Co-Work. Select a scenario to watch it execute a real business task in real time — or type your own.</p>
+      <div class="welcome-hint"><span class="arrow">←</span> Pick a scenario to begin</div>
+    </div>`;
+  setStageInfo('🤖', 'FCO Claude Demo', 'Select a scenario on the left to begin the live demonstration');
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+}
+</script>
+</body>
+</html>
