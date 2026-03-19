@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Repo Builder | First Class Operations</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --fco-bg: #f6f5f2;
+  --fco-dark: #2f2e2d;
+  --fco-orange: #c86b45;
+  --fco-tan: #c4b7a6;
+  --fco-darker: #1a1918;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--fco-bg);
+  color: var(--fco-dark);
+  min-height: 100vh;
+}
+
+/* NAV */
+nav {
+  background: var(--fco-dark);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { height: 28px; }
+.nav-logo span { color: white; font-weight: 800; font-size: 14px; letter-spacing: 0.5px; }
+.nav-links { display: flex; gap: 8px; align-items: center; }
+.nav-links a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.nav-links a:hover { color: white; background: rgba(255,255,255,0.1); }
+.nav-links a.active { color: var(--fco-orange); }
+.nav-badge {
+  background: var(--fco-orange);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, var(--fco-darker), #2f2e2d);
+  color: white;
+  padding: 60px 24px 50px;
+  text-align: center;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(200,107,69,0.2);
+  border: 1px solid rgba(200,107,69,0.4);
+  color: var(--fco-orange);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+.hero h1 span { color: var(--fco-orange); }
+.hero p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  max-width: 560px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+.hero-steps {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.hero-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+}
+.hero-step .num {
+  width: 24px;
+  height: 24px;
+  background: var(--fco-orange);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+}
+
+/* MAIN */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+  align-items: start;
+}
+
+/* BUILDER CARD */
+.builder-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+.builder-header {
+  background: linear-gradient(135deg, var(--fco-dark), var(--fco-darker));
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.builder-header .icon {
+  width: 40px;
+  height: 40px;
+  background: var(--fco-orange);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.builder-header h2 { color: white; font-size: 16px; font-weight: 700; }
+.builder-header p { color: rgba(255,255,255,0.5); font-size: 12px; }
+
+/* PROGRESS BAR */
+.progress-bar-wrap {
+  padding: 16px 24px;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.progress-bar {
+  height: 4px;
+  background: #eee;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--fco-orange), #e8855f);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+/* FORM AREA */
+.form-area {
+  padding: 28px 24px;
+  min-height: 400px;
+}
+
+.step-block { display: none; }
+.step-block.active { display: block; animation: slideIn 0.3s ease; }
+@keyframes slideIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+
+.step-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--fco-orange);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.step-question {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--fco-dark);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+.step-hint {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.step-hint strong { color: var(--fco-dark); }
+
+.form-input {
+  width: 100%;
+  border: 2px solid #e8e6e3;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: 'Barlow', sans-serif;
+  color: var(--fco-dark);
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--fco-bg);
+}
+.form-input:focus { border-color: var(--fco-orange); background: white; }
+.form-input::placeholder { color: #bbb; }
+
+textarea.form-input {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.5;
+}
+
+.quick-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.quick-pick {
+  background: var(--fco-bg);
+  border: 1px solid #ddd;
+  color: var(--fco-dark);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: 'Barlow', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.quick-pick:hover, .quick-pick.selected {
+  background: rgba(200,107,69,0.1);
+  border-color: var(--fco-orange);
+  color: var(--fco-orange);
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 4px;
+}
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--fco-bg);
+  border: 2px solid #e8e6e3;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+  font-weight: 500;
+}
+.checkbox-item:hover { border-color: var(--fco-tan); }
+.checkbox-item.checked {
+  background: rgba(200,107,69,0.08);
+  border-color: var(--fco-orange);
+  color: var(--fco-orange);
+}
+.checkbox-item input { display: none; }
+.checkbox-icon { font-size: 16px; }
+
+.nav-btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+.btn-back {
+  background: none;
+  border: 2px solid #e8e6e3;
+  color: #888;
+  padding: 11px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Barlow', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-back:hover { border-color: var(--fco-tan); color: var(--fco-dark); }
+.btn-next {
+  flex: 1;
+  background: var(--fco-orange);
+  border: none;
+  color: white;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Barlow', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-next:hover { background: #b85a3a; }
+.btn-next:disabled { background: #ccc; cursor: not-allowed; }
+
+/* GENERATING STATE */
+.generating {
+  display: none;
+  padding: 40px 24px;
+  text-align: center;
+}
+.generating.active { display: block; }
+.gen-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid #eee;
+  border-top-color: var(--fco-orange);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.gen-status {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--fco-dark);
+  margin-bottom: 8px;
+}
+.gen-sub { font-size: 13px; color: #888; }
+.gen-files {
+  margin-top: 20px;
+  text-align: left;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.gen-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 4px;
+  transition: all 0.3s;
+}
+.gen-file.pending { color: #bbb; }
+.gen-file.building { color: var(--fco-orange); background: rgba(200,107,69,0.08); }
+.gen-file.done { color: #4ade80; }
+.gen-file-icon { font-size: 14px; width: 20px; text-align: center; }
+
+/* OUTPUT PANEL */
+.output-panel {
+  display: none;
+  padding: 24px;
+}
+.output-panel.active { display: block; animation: slideIn 0.4s ease; }
+.output-success {
+  background: rgba(74,222,128,0.1);
+  border: 1px solid rgba(74,222,128,0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.output-success .check { font-size: 24px; }
+.output-success h3 { font-size: 15px; font-weight: 700; color: var(--fco-dark); }
+.output-success p { font-size: 12px; color: #888; }
+
+.file-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.file-tab {
+  background: var(--fco-bg);
+  border: 1px solid #ddd;
+  color: #888;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: 'Barlow', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+.file-tab.active {
+  background: var(--fco-dark);
+  border-color: var(--fco-dark);
+  color: white;
+}
+
+.file-viewer {
+  background: var(--fco-darker);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.file-viewer-header {
+  background: rgba(255,255,255,0.05);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.file-viewer-header span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  font-family: monospace;
+}
+.copy-btn {
+  background: rgba(200,107,69,0.2);
+  border: 1px solid rgba(200,107,69,0.4);
+  color: var(--fco-orange);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-family: 'Barlow', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { background: rgba(200,107,69,0.3); }
+.file-content {
+  padding: 16px;
+  font-family: monospace;
+  font-size: 12px;
+  color: #e2e8f0;
+  line-height: 1.7;
+  max-height: 320px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.file-content::-webkit-scrollbar { width: 4px; }
+.file-content::-webkit-scrollbar-track { background: transparent; }
+.file-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+.download-btns {
+  display: flex;
+  gap: 10px;
+}
+.btn-download-all {
+  flex: 1;
+  background: var(--fco-orange);
+  border: none;
+  color: white;
+  padding: 13px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Barlow', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-download-all:hover { background: #b85a3a; }
+.btn-restart {
+  background: none;
+  border: 2px solid #e8e6e3;
+  color: #888;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Barlow', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-restart:hover { border-color: var(--fco-tan); color: var(--fco-dark); }
+
+.github-instructions {
+  background: rgba(200,107,69,0.06);
+  border: 1px solid rgba(200,107,69,0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+.github-instructions h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fco-dark);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.github-instructions ol {
+  padding-left: 18px;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.8;
+}
+.github-instructions code {
+  background: rgba(200,107,69,0.1);
+  color: var(--fco-orange);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+/* SIDEBAR */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.sidebar-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.sidebar-card h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fco-dark);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.file-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0eeeb;
+  font-size: 12px;
+}
+.file-list-item:last-child { border-bottom: none; }
+.fli-icon { font-size: 14px; width: 20px; text-align: center; }
+.fli-info { flex: 1; }
+.fli-name { font-weight: 600; color: var(--fco-dark); font-family: monospace; font-size: 11px; }
+.fli-desc { color: #888; font-size: 11px; }
+.fli-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ddd;
+  flex-shrink: 0;
+}
+.fli-status.active { background: var(--fco-orange); animation: pulse 1s infinite; }
+.fli-status.done { background: #4ade80; animation: none; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.what-is-card {
+  background: linear-gradient(135deg, var(--fco-dark), var(--fco-darker));
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+}
+.what-is-card h3 { color: var(--fco-orange); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+.what-is-card p { font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 10px; }
+.what-is-card .tip {
+  background: rgba(200,107,69,0.15);
+  border-left: 3px solid var(--fco-orange);
+  padding: 8px 12px;
+  border-radius: 0 6px 6px 0;
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .main { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .checkbox-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="fco_logo.png" alt="FCO">
+    <span>FIRST CLASS OPERATIONS</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Guide</a>
+    <a href="chat-agent.html">Ask the Agent</a>
+    <a href="repo-builder.html" class="active">Repo Builder <span class="nav-badge">NEW</span></a>
+    <a href="agent.html">File Generator</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Option C · Repo Builder</div>
+  <h1>Build Your <span>Claude Context Repo</span><br>in 5 Minutes</h1>
+  <p>Answer 8 questions about your business. We generate all your context files, skills files, and folder structure — ready to upload to GitHub and connect to Claude Projects.</p>
+  <div class="hero-steps">
+    <div class="hero-step"><div class="num">1</div> Answer 8 questions</div>
+    <div class="hero-step"><div class="num">2</div> AI generates your files</div>
+    <div class="hero-step"><div class="num">3</div> Download your repo</div>
+    <div class="hero-step"><div class="num">4</div> Upload to GitHub</div>
+    <div class="hero-step"><div class="num">5</div> Connect to Claude Projects</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- BUILDER -->
+  <div class="builder-card">
+    <div class="builder-header">
+      <div class="icon">🏗</div>
+      <div>
+        <h2>Claude Context Repo Builder</h2>
+        <p>Generates personalised MD files and folder structure for your business</p>
+      </div>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-label">
+        <span id="progressLabel">Step 1 of 8</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <!-- FORM STEPS -->
+    <div class="form-area" id="formArea">
+
+      <!-- STEP 1: Name & Role -->
+      <div class="step-block active" id="step1">
+        <div class="step-label">Step 1 of 8 · Identity</div>
+        <div class="step-question">What is your name and role?</div>
+        <div class="step-hint">This goes into your <strong>about.md</strong> — the core file Claude reads to understand who you are.</div>
+        <input type="text" class="form-input" id="s1_name" placeholder="e.g. Sarah Mitchell, Founder & CEO">
+        <div class="quick-picks">
+          <button class="quick-pick" onclick="appendPick('s1_name', 'Founder & CEO')">Founder & CEO</button>
+          <button class="quick-pick" onclick="appendPick('s1_name', 'Managing Director')">Managing Director</button>
+          <button class="quick-pick" onclick="appendPick('s1_name', 'Operations Director')">Operations Director</button>
+          <button class="quick-pick" onclick="appendPick('s1_name', 'Consultant')">Consultant</button>
+          <button class="quick-pick" onclick="appendPick('s1_name', 'Fractional COO')">Fractional COO</button>
+        </div>
+        <div class="nav-btns">
+          <button class="btn-next" onclick="nextStep(1)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Business -->
+      <div class="step-block" id="step2">
+        <div class="step-label">Step 2 of 8 · Business</div>
+        <div class="step-question">Describe your business in 2–3 sentences.</div>
+        <div class="step-hint">What do you do, who do you serve, and what outcome do you deliver? Be specific — this is the context Claude uses for every output.</div>
+        <textarea class="form-input" id="s2_business" placeholder="e.g. We are a management consulting firm that helps founder-led businesses build operational infrastructure. Our clients are £1M–£10M revenue companies that have outgrown their current systems. We deliver clarity, structure, and scalable processes."></textarea>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="prevStep(2)">← Back</button>
+          <button class="btn-next" onclick="nextStep(2)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Tone -->
+      <div class="step-block" id="step3">
+        <div class="step-label">Step 3 of 8 · Brand Voice</div>
+        <div class="step-question">How would you describe your communication style?</div>
+        <div class="step-hint">Choose all that apply. This builds your <strong>brand.md</strong> — the file that makes every Claude output sound like you.</div>
+        <div class="checkbox-grid" id="toneGrid">
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">🎯</span> Direct & no-fluff</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">🤝</span> Warm & relational</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">📊</span> Data-driven & analytical</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">🧠</span> Strategic & thoughtful</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">⚡</span> Energetic & motivating</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">🎓</span> Educational & detailed</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">💼</span> Professional & formal</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">😊</span> Conversational & approachable</label>
+        </div>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="prevStep(3)">← Back</button>
+          <button class="btn-next" onclick="nextStep(3)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Goals -->
+      <div class="step-block" id="step4">
+        <div class="step-label">Step 4 of 8 · Current Goals</div>
+        <div class="step-question">What are your top 3 business goals right now?</div>
+        <div class="step-hint">Claude uses these to prioritise outputs and make recommendations relevant to where you're headed, not just where you are.</div>
+        <input type="text" class="form-input" id="s4_goal1" placeholder="Goal 1 — e.g. Close 5 new retainer clients at £5K/month" style="margin-bottom:10px">
+        <input type="text" class="form-input" id="s4_goal2" placeholder="Goal 2 — e.g. Hire and onboard a Head of Delivery" style="margin-bottom:10px">
+        <input type="text" class="form-input" id="s4_goal3" placeholder="Goal 3 — e.g. Build a repeatable lead generation system">
+        <div class="nav-btns">
+          <button class="btn-back" onclick="prevStep(4)">← Back</button>
+          <button class="btn-next" onclick="nextStep(4)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5: Audience -->
+      <div class="step-block" id="step5">
+        <div class="step-label">Step 5 of 8 · Audience</div>
+        <div class="step-question">Describe your ideal client or customer.</div>
+        <div class="step-hint">Who are they, what do they struggle with, and what do they want? This builds your <strong>audience_profiles.md</strong> — so Claude always writes to the right person.</div>
+        <textarea class="form-input" id="s5_audience" placeholder="e.g. Founders of service businesses doing £1M–£5M revenue. They're operationally overwhelmed, wearing too many hats, and struggling to delegate. They want systems and clarity so they can step back from day-to-day delivery."></textarea>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="prevStep(5)">← Back</button>
+          <button class="btn-next" onclick="nextStep(5)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 6: Key Task -->
+      <div class="step-block" id="step6">
+        <div class="step-label">Step 6 of 8 · Workflow</div>
+        <div class="step-question">What is your most important recurring task?</div>
+        <div class="step-hint">This becomes your first <strong>workflow_[task].md</strong> file — a step-by-step process Claude follows so outputs match your exact method, not a generic one.</div>
+        <input type="text" class="form-input" id="s6_task" placeholder="e.g. Writing client proposals, Building financial models, Creating SOPs, Running discovery calls" style="margin-bottom:10px">
+        <textarea class="form-input" id="s6_process" placeholder="Briefly describe how you currently do this task (even rough notes are fine)..." style="min-height:80px"></textarea>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="prevStep(6)">← Back</button>
+          <button class="btn-next" onclick="nextStep(6)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 7: Skills Files -->
+      <div class="step-block" id="step7">
+        <div class="step-label">Step 7 of 8 · Skills Files</div>
+        <div class="step-question">Which skills files do you want Claude to have?</div>
+        <div class="step-hint">Each skills file gives Claude a specialist capability for that task type. Select all that apply to your work.</div>
+        <div class="checkbox-grid" id="skillsGrid">
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">✍️</span> Proposal Writing</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">📊</span> Financial Analysis</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">📋</span> SOP Creation</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">📣</span> Content & Marketing</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">🔍</span> Client Research</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">📧</span> Email Writing</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">🎯</span> Strategy & Planning</label>
+          <label class="checkbox-item" onclick="toggleCheck(this)"><span class="checkbox-icon">👥</span> Team & HR</label>
+        </div>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="prevStep(7)">← Back</button>
+          <button class="btn-next" onclick="nextStep(7)">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 8: API Key -->
+      <div class="step-block" id="step8">
+        <div class="step-label">Step 8 of 8 · Generate</div>
+        <div class="step-question">Ready to generate your repo.</div>
+        <div class="step-hint">Enter your OpenAI API key to generate personalised files using AI. Your key stays in your browser only. Or click <strong>Generate with Templates</strong> to get pre-built templates you fill in yourself.</div>
+        <input type="password" class="form-input" id="s8_apikey" placeholder="sk-proj-... (optional — for AI-personalised files)" style="margin-bottom:10px">
+        <p style="font-size:11px;color:#aaa;margin-bottom:16px">Don't have a key? <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--fco-orange)">Get one free →</a> · Key is never stored or sent to any server.</p>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="prevStep(8)">← Back</button>
+          <button class="btn-next" onclick="generateRepo()">⚡ Generate My Repo →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENERATING STATE -->
+    <div class="generating" id="generatingState">
+      <div class="gen-spinner"></div>
+      <div class="gen-status" id="genStatus">Building your context files...</div>
+      <div class="gen-sub" id="genSub">This takes about 15–30 seconds</div>
+      <div class="gen-files" id="genFiles"></div>
+    </div>
+
+    <!-- OUTPUT PANEL -->
+    <div class="output-panel" id="outputPanel">
+      <div class="output-success">
+        <div class="check">✅</div>
+        <div>
+          <h3>Your Claude repo is ready!</h3>
+          <p id="outputSummary">6 files generated · Ready to upload to GitHub</p>
+        </div>
+      </div>
+
+      <div class="file-tabs" id="fileTabs"></div>
+
+      <div class="file-viewer">
+        <div class="file-viewer-header">
+          <span id="activeFileName">about.md</span>
+          <button class="copy-btn" onclick="copyActiveFile()">Copy</button>
+        </div>
+        <div class="file-content" id="activeFileContent"></div>
+      </div>
+
+      <div class="download-btns">
+        <button class="btn-download-all" onclick="downloadAll()">⬇ Download All Files (.zip)</button>
+        <button class="btn-restart" onclick="restartBuilder()">Start Over</button>
+      </div>
+
+      <div class="github-instructions">
+        <h4>📁 How to use this repo with Claude Projects</h4>
+        <ol>
+          <li>Click <strong>Download All Files</strong> above</li>
+          <li>Go to <a href="https://github.com/new" target="_blank" style="color:var(--fco-orange)">github.com/new</a> and create a private repo called <code>my-claude-context</code></li>
+          <li>Upload all the downloaded files to the repo root</li>
+          <li>In Claude, open <strong>Projects</strong> and create a new project</li>
+          <li>Click <strong>Add Content → Connect GitHub</strong> and select your repo</li>
+          <li>Start every session with: <em>"Read all attached files before responding. Ask clarifying questions before starting any task."</em></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <h3>📁 Files Being Built</h3>
+      <div class="file-list-item">
+        <div class="fli-icon">👤</div>
+        <div class="fli-info">
+          <div class="fli-name">about.md</div>
+          <div class="fli-desc">Your identity, role & goals</div>
+        </div>
+        <div class="fli-status" id="status_about"></div>
+      </div>
+      <div class="file-list-item">
+        <div class="fli-icon">🎨</div>
+        <div class="fli-info">
+          <div class="fli-name">brand.md</div>
+          <div class="fli-desc">Tone, voice & language rules</div>
+        </div>
+        <div class="fli-status" id="status_brand"></div>
+      </div>
+      <div class="file-list-item">
+        <div class="fli-icon">📋</div>
+        <div class="fli-info">
+          <div class="fli-name">workflow_[task].md</div>
+          <div class="fli-desc">Your key recurring process</div>
+        </div>
+        <div class="fli-status" id="status_workflow"></div>
+      </div>
+      <div class="file-list-item">
+        <div class="fli-icon">🎯</div>
+        <div class="fli-info">
+          <div class="fli-name">audience_profiles.md</div>
+          <div class="fli-desc">Ideal client profiles</div>
+        </div>
+        <div class="fli-status" id="status_audience"></div>
+      </div>
+      <div class="file-list-item">
+        <div class="fli-icon">🛠</div>
+        <div class="fli-info">
+          <div class="fli-name">skills_[type].md</div>
+          <div class="fli-desc">Specialist capability files</div>
+        </div>
+        <div class="fli-status" id="status_skills"></div>
+      </div>
+      <div class="file-list-item">
+        <div class="fli-icon">📖</div>
+        <div class="fli-info">
+          <div class="fli-name">README.md</div>
+          <div class="fli-desc">Repo setup instructions</div>
+        </div>
+        <div class="fli-status" id="status_readme"></div>
+      </div>
+    </div>
+
+    <div class="what-is-card">
+      <h3>Why This Matters</h3>
+      <p>Most people use Claude like a search engine — one question, one answer, no memory. A context repo changes everything.</p>
+      <p>When Claude reads your files at the start of every session, it knows your business, your voice, your clients, and your processes. Every output sounds like you wrote it.</p>
+      <div class="tip">💡 The operators getting 10× output from Claude aren't writing better prompts. They're building better context files.</div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>🔗 After You Build</h3>
+      <div style="font-size:12px;color:#666;line-height:1.8">
+        <div>1. Upload files to a private GitHub repo</div>
+        <div>2. Connect repo to Claude Projects</div>
+        <div>3. Use the alignment prompt every session</div>
+        <div>4. Update files as your business evolves</div>
+        <div style="margin-top:10px"><a href="chat-agent.html" style="color:var(--fco-orange);font-weight:700;text-decoration:none">→ Ask the FCO Agent for help</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+let currentStep = 1;
+const totalSteps = 8;
+let generatedFiles = {};
+let activeFile = '';
+
+// ── NAVIGATION ──
+function nextStep(from) {
+  const val = getStepValue(from);
+  if (!val) {
+    alert('Please fill in this field before continuing.');
+    return;
+  }
+  goToStep(from + 1);
+}
+
+function prevStep(from) {
+  goToStep(from - 1);
+}
+
+function goToStep(n) {
+  document.getElementById('step' + currentStep)?.classList.remove('active');
+  currentStep = n;
+  document.getElementById('step' + n)?.classList.add('active');
+  updateProgress(n);
+}
+
+function getStepValue(step) {
+  const map = {
+    1: 's1_name', 2: 's2_business', 4: 's4_goal1',
+    5: 's5_audience', 6: 's6_task'
+  };
+  if (map[step]) {
+    return document.getElementById(map[step])?.value?.trim();
+  }
+  if (step === 3) {
+    return document.querySelectorAll('#toneGrid .checked').length > 0 ? 'ok' : null;
+  }
+  if (step === 7) return 'ok'; // skills optional
+  if (step === 8) return 'ok'; // api key optional
+  return 'ok';
+}
+
+function updateProgress(step) {
+  const pct = Math.round(((step - 1) / totalSteps) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Step ${step} of ${totalSteps}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+}
+
+function appendPick(inputId, value) {
+  const input = document.getElementById(inputId);
+  const current = input.value.trim();
+  if (current && !current.endsWith(',')) {
+    input.value = current + ', ' + value;
+  } else {
+    input.value = value;
+  }
+}
+
+// ── COLLECT DATA ──
+function collectData() {
+  const toneItems = document.querySelectorAll('#toneGrid .checked');
+  const tones = Array.from(toneItems).map(el => el.textContent.trim().replace(/^[^\s]+\s/, ''));
+
+  const skillItems = document.querySelectorAll('#skillsGrid .checked');
+  const skills = Array.from(skillItems).map(el => el.textContent.trim().replace(/^[^\s]+\s/, ''));
+
+  return {
+    name: document.getElementById('s1_name').value.trim(),
+    business: document.getElementById('s2_business').value.trim(),
+    tones: tones,
+    goal1: document.getElementById('s4_goal1').value.trim(),
+    goal2: document.getElementById('s4_goal2').value.trim(),
+    goal3: document.getElementById('s4_goal3').value.trim(),
+    audience: document.getElementById('s5_audience').value.trim(),
+    keyTask: document.getElementById('s6_task').value.trim(),
+    taskProcess: document.getElementById('s6_process').value.trim(),
+    skills: skills,
+    apiKey: document.getElementById('s8_apikey').value.trim()
+  };
+}
+
+// ── GENERATE REPO ──
+async function generateRepo() {
+  const data = collectData();
+
+  // Hide form, show generating
+  document.getElementById('formArea').style.display = 'none';
+  document.getElementById('generatingState').classList.add('active');
+
+  const filesToBuild = [
+    { key: 'about', name: 'about.md', status: 'status_about', label: 'Building about.md...' },
+    { key: 'brand', name: 'brand.md', status: 'status_brand', label: 'Building brand.md...' },
+    { key: 'workflow', name: `workflow_${data.keyTask.toLowerCase().replace(/\s+/g,'_').substring(0,20)}.md`, status: 'status_workflow', label: 'Building workflow file...' },
+    { key: 'audience', name: 'audience_profiles.md', status: 'status_audience', label: 'Building audience profiles...' },
+    { key: 'skills', name: 'skills_overview.md', status: 'status_skills', label: 'Building skills files...' },
+    { key: 'readme', name: 'README.md', status: 'status_readme', label: 'Building README...' }
+  ];
+
+  // Show file list in generating state
+  const genFilesEl = document.getElementById('genFiles');
+  genFilesEl.innerHTML = filesToBuild.map(f =>
+    `<div class="gen-file pending" id="gen_${f.key}">
+      <span class="gen-file-icon">📄</span> ${f.name}
+    </div>`
+  ).join('');
+
+  // Generate each file
+  for (const file of filesToBuild) {
+    document.getElementById('genStatus').textContent = file.label;
+    document.getElementById('gen_' + file.key).className = 'gen-file building';
+    document.getElementById('status_' + file.key).className = 'fli-status active';
+
+    if (data.apiKey && data.apiKey.startsWith('sk-')) {
+      generatedFiles[file.key] = await generateFileWithAI(file.key, data);
+    } else {
+      await new Promise(r => setTimeout(r, 600));
+      generatedFiles[file.key] = generateFileFromTemplate(file.key, data);
+    }
+
+    generatedFiles[file.key + '_name'] = file.name;
+    document.getElementById('gen_' + file.key).className = 'gen-file done';
+    document.getElementById('gen_' + file.key).innerHTML = `<span class="gen-file-icon">✅</span> ${file.name}`;
+    document.getElementById('status_' + file.key).className = 'fli-status done';
+  }
+
+  // Add individual skills files
+  for (const skill of data.skills) {
+    const skillKey = skill.toLowerCase().replace(/\s+/g, '_');
+    if (data.apiKey && data.apiKey.startsWith('sk-')) {
+      generatedFiles['skill_' + skillKey] = await generateSkillFileWithAI(skill, data);
+    } else {
+      generatedFiles['skill_' + skillKey] = generateSkillTemplate(skill, data);
+    }
+    generatedFiles['skill_' + skillKey + '_name'] = `skill_${skillKey}.md`;
+  }
+
+  showOutput(data);
+}
+
+// ── AI GENERATION ──
+async function generateFileWithAI(fileKey, data) {
+  const prompts = {
+    about: `Generate a professional about.md context file for Claude AI. 
+Name/Role: ${data.name}
+Business: ${data.business}
+Goals: 1) ${data.goal1} 2) ${data.goal2} 3) ${data.goal3}
+
+Format as a clean Markdown file with sections: Role & Context, What I Do, My Goals This Quarter, Communication Style. Be specific and practical. Under 400 words.`,
+
+    brand: `Generate a brand.md voice guide for Claude AI.
+Business: ${data.business}
+Communication style: ${data.tones.join(', ')}
+
+Format as Markdown with sections: Tone Descriptors, Language Rules (Do/Don't table), Formatting Standards, Words to Use, Words to Avoid. Under 350 words.`,
+
+    workflow: `Generate a workflow_${data.keyTask.toLowerCase().replace(/\s+/g,'_')}.md process file for Claude AI.
+Task: ${data.keyTask}
+Current process: ${data.taskProcess || 'Not specified — create a best-practice process'}
+Business context: ${data.business}
+
+Format as Markdown with: Purpose, When to Use This, Step-by-Step Process (numbered), Quality Checklist, Example Output Format. Under 400 words.`,
+
+    audience: `Generate an audience_profiles.md file for Claude AI.
+Business: ${data.business}
+Ideal client description: ${data.audience}
+
+Create 2 detailed client profiles. Each profile should have: Profile Name, Demographics, Business Situation, Key Pain Points (3), What They Want (3), How to Communicate with Them, Trigger Phrases That Resonate. Format as clean Markdown. Under 500 words.`,
+
+    skills: `Generate a skills_overview.md master skills file for Claude AI.
+Business: ${data.business}
+Skills needed: ${data.skills.join(', ')}
+
+For each skill, write a brief 3-4 sentence description of how Claude should approach that task for this specific business. Format as Markdown with a section per skill. Under 400 words.`,
+
+    readme: `Generate a README.md for a Claude context repository.
+Business owner: ${data.name}
+Business: ${data.business}
+
+Include: What This Repo Is, How to Use With Claude Projects (step by step), File Index (list each file type and purpose), The Alignment Prompt to use every session, How to Update Files. Professional, practical tone. Under 400 words.`
+  };
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${data.apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You are an expert at creating Claude AI context files for business operators. Generate clean, practical Markdown files that give Claude maximum useful context about a business. Be specific, not generic.' },
+          { role: 'user', content: prompts[fileKey] }
+        ],
+        max_tokens: 600,
+        temperature: 0.7
+      })
+    });
+    const result = await response.json();
+    return result.choices?.[0]?.message?.content || generateFileFromTemplate(fileKey, data);
+  } catch (e) {
+    return generateFileFromTemplate(fileKey, data);
+  }
+}
+
+async function generateSkillFileWithAI(skill, data) {
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${data.apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You create Claude AI skills files for business operators. A skills file defines how Claude should approach a specific task type for a specific business.' },
+          { role: 'user', content: `Generate a skill_${skill.toLowerCase().replace(/\s+/g,'_')}.md skills file for Claude AI.
+Business: ${data.business}
+Skill: ${skill}
+
+Include: Purpose, When to Use, How to Approach This Task for This Business, Key Principles (5), Standard Output Format, Quality Checklist. Under 350 words.` }
+        ],
+        max_tokens: 500,
+        temperature: 0.7
+      })
+    });
+    const result = await response.json();
+    return result.choices?.[0]?.message?.content || generateSkillTemplate(skill, data);
+  } catch (e) {
+    return generateSkillTemplate(skill, data);
+  }
+}
+
+// ── TEMPLATE GENERATION (no API key) ──
+function generateFileFromTemplate(fileKey, data) {
+  const templates = {
+    about: `# About Me — ${data.name}
+
+## Role & Context
+**Role:** ${data.name}
+**Business:** ${data.business.split('.')[0]}
+**Date Updated:** ${new Date().toLocaleDateString('en-GB', {month:'long', year:'numeric'})}
+
+## What I Do
+${data.business}
+
+## My Goals This Quarter
+1. ${data.goal1 || '[Add your first goal here]'}
+2. ${data.goal2 || '[Add your second goal here]'}
+3. ${data.goal3 || '[Add your third goal here]'}
+
+## Communication Style
+**Tone:** ${data.tones.length > 0 ? data.tones.join(', ') : 'Direct, professional, clear'}
+**Format:** Short paragraphs. Clear headers. Bullet points only when listing.
+**Avoid:** Jargon, passive voice, filler phrases like "it's worth noting"
+
+## Example of Writing I'm Proud Of
+[Paste your best email, proposal intro, or LinkedIn post here — this teaches Claude your exact voice]
+
+## Current Priorities
+- [Add your most important current project]
+- [Add your most pressing challenge]
+- [Add what you're focused on this week]`,
+
+    brand: `# Brand Voice Guide
+
+## About This File
+This file defines how Claude should write for ${data.name}. Every output should match this voice exactly.
+
+## Tone Descriptors
+${data.tones.length > 0 ? data.tones.map(t => `- **${t}**`).join('\n') : '- Direct and clear\n- Professional\n- Confident'}
+
+## Language Rules
+
+| Do | Don't |
+|---|---|
+| Use short, punchy sentences | Use passive voice |
+| Lead with the point | Bury the headline |
+| Use concrete examples | Use vague generalisations |
+| Write like you're talking to a smart peer | Use jargon or buzzwords |
+| Use "you" and "we" | Use overly formal language |
+
+## Formatting Standards
+- **Headers:** Use them. Make them descriptive.
+- **Paragraphs:** 2–4 sentences max.
+- **Lists:** Only when genuinely listing 3+ items.
+- **Bold:** For key terms and important points only.
+- **Length:** As short as it can be while being complete.
+
+## Signature Phrases
+[Add 3–5 phrases you use often — these make outputs sound like you]
+
+## Words to Avoid
+[Add words or phrases that don't sound like you]`,
+
+    workflow: `# Workflow: ${data.keyTask}
+
+## Purpose
+This file defines how Claude should approach ${data.keyTask} for ${data.name.split(',')[0]}.
+
+## When to Use This
+Use this workflow whenever you need to ${data.keyTask.toLowerCase()}.
+
+## Step-by-Step Process
+${data.taskProcess ? `Based on your current process:\n${data.taskProcess}\n\n` : ''}
+1. **Clarify the brief** — Before starting, confirm: What is the goal? Who is the audience? What does success look like?
+2. **Gather context** — Review any relevant files, previous work, or reference materials
+3. **Draft structure first** — Outline the key sections before writing any content
+4. **Write the first draft** — Focus on getting the key points down, not perfection
+5. **Review against brief** — Check the output answers the original question
+6. **Refine and polish** — Tighten language, check formatting, remove anything unnecessary
+
+## Quality Checklist
+- [ ] Does it answer the brief directly?
+- [ ] Is the tone consistent with brand.md?
+- [ ] Is it the right length — not too long, not too short?
+- [ ] Does it start with the most important point?
+- [ ] Has it been reviewed against the audience profile?
+
+## Output Format
+[Describe the expected format — e.g. Word doc, slide deck, email, PDF]`,
+
+    audience: `# Audience Profiles
+
+## Profile 1: The Scaling Founder
+
+**Who They Are:** ${data.audience.split('.')[0] || 'Founder of a growing business'}
+
+**Business Situation:**
+${data.audience || '[Describe their business situation]'}
+
+**Key Pain Points:**
+1. [Pain point 1 — what keeps them up at night]
+2. [Pain point 2 — what frustrates them most]
+3. [Pain point 3 — what they've tried that hasn't worked]
+
+**What They Want:**
+1. [Outcome 1 — what success looks like for them]
+2. [Outcome 2 — what they're really buying]
+3. [Outcome 3 — the emotional result they want]
+
+**How to Communicate with Them:**
+- Lead with outcomes, not process
+- Use concrete numbers and timeframes
+- Acknowledge the problem before offering the solution
+- Be direct — they're busy and respect people who respect their time
+
+**Trigger Phrases:**
+- "Stop doing everything yourself"
+- "Built to scale"
+- "Operational clarity"
+
+---
+
+## Profile 2: [Add Your Second Profile]
+
+[Describe your second key audience segment here]`,
+
+    skills: `# Skills Overview
+
+## Purpose
+This file defines Claude's specialist capabilities for ${data.name.split(',')[0]}'s work.
+
+${data.skills.length > 0 ? data.skills.map(skill => `## ${skill}
+
+Claude should approach ${skill.toLowerCase()} for this business by:
+- Understanding the specific context and goal before starting
+- Following the brand voice defined in brand.md
+- Producing outputs that match the audience profiles
+- Asking clarifying questions when the brief is unclear
+
+[Add specific instructions for how Claude should handle ${skill.toLowerCase()} tasks for your business]
+
+`).join('') : '## Add Your Skills Here\n\n[Go back and select the skills files you need, or add them manually]'}`,
+
+    readme: `# Claude Context Repository — ${data.name.split(',')[0]}
+
+## What This Repo Is
+This repository contains all the context files that Claude reads at the start of every session. These files tell Claude who I am, how I communicate, who my clients are, and how I like to work.
+
+## Files in This Repo
+
+| File | Purpose |
+|---|---|
+| \`about.md\` | My role, business context, goals, and communication style |
+| \`brand.md\` | Tone of voice, language rules, and formatting standards |
+| \`workflow_[task].md\` | Step-by-step process for key recurring tasks |
+| \`audience_profiles.md\` | Detailed profiles of my ideal clients |
+| \`skill_[type].md\` | Specialist capability files for specific task types |
+
+## How to Use With Claude Projects
+
+1. Go to [claude.ai](https://claude.ai) and open **Projects**
+2. Create a new project called "My Business Context"
+3. Click **Add Content → Connect GitHub** and select this repo
+4. Claude will now read all files at the start of every session
+
+## The Alignment Prompt (Use Every Session)
+
+\`\`\`
+I want to [YOUR TASK] so that [WHAT SUCCESS LOOKS LIKE].
+
+First, read all attached context files completely before responding.
+
+DO NOT start executing yet. Ask me clarifying questions 
+so we can refine the approach together step by step.
+
+Only begin work once we've aligned on the direction.
+\`\`\`
+
+## How to Update These Files
+
+Update your context files whenever:
+- Your goals change (quarterly)
+- You onboard a new type of client
+- You develop a new process or workflow
+- Your brand voice evolves
+
+## Built With
+Generated by the [FCO Claude Repo Builder](https://scotland2330.github.io/fco-claude-guide/repo-builder.html) · First Class Operations`
+  };
+
+  return templates[fileKey] || `# ${fileKey}\n\n[Content for this file]`;
+}
+
+function generateSkillTemplate(skill, data) {
+  const skillSlug = skill.toLowerCase().replace(/\s+/g,'_');
+  return `# Skill: ${skill}
+
+## Purpose
+This skills file defines how Claude should approach ${skill.toLowerCase()} tasks for ${data.name.split(',')[0]}.
+
+## When to Use This
+Use this skills file whenever you need Claude to help with ${skill.toLowerCase()}.
+
+## How to Approach This Task
+1. **Understand the brief** — Clarify the goal, audience, and desired outcome before starting
+2. **Review context files** — Check about.md, brand.md, and audience_profiles.md before producing output
+3. **Follow the process** — Use any relevant workflow files as the structure
+4. **Match the voice** — Every output should sound like it was written by ${data.name.split(',')[0]}
+
+## Key Principles for ${skill}
+1. [Principle 1 — add your most important rule for this task]
+2. [Principle 2 — what makes a great output for this task]
+3. [Principle 3 — what to avoid]
+4. [Principle 4 — quality standard to aim for]
+5. [Principle 5 — how to know when it's done]
+
+## Standard Output Format
+[Describe the expected format for ${skill.toLowerCase()} outputs — e.g. document structure, length, sections]
+
+## Quality Checklist
+- [ ] Does it match the brand voice in brand.md?
+- [ ] Is it written for the right audience (see audience_profiles.md)?
+- [ ] Does it answer the brief directly?
+- [ ] Is it the right length?
+- [ ] Has it been reviewed against the goal?
+
+## Example Prompt to Use
+\`\`\`
+I need to [SPECIFIC ${skill.toUpperCase()} TASK].
+
+Context: [RELEVANT BACKGROUND]
+Audience: [WHO THIS IS FOR]
+Goal: [WHAT SUCCESS LOOKS LIKE]
+
+Read the attached context files first. Ask me clarifying questions before starting.
+\`\`\``;
+}
+
+// ── SHOW OUTPUT ──
+function showOutput(data) {
+  document.getElementById('generatingState').classList.remove('active');
+  document.getElementById('outputPanel').classList.add('active');
+
+  // Build file list
+  const allFiles = {};
+  allFiles['about'] = { name: 'about.md', content: generatedFiles['about'] };
+  allFiles['brand'] = { name: 'brand.md', content: generatedFiles['brand'] };
+  const wfKey = `workflow_${data.keyTask.toLowerCase().replace(/\s+/g,'_').substring(0,20)}.md`;
+  allFiles['workflow'] = { name: wfKey, content: generatedFiles['workflow'] };
+  allFiles['audience'] = { name: 'audience_profiles.md', content: generatedFiles['audience'] };
+  allFiles['skills'] = { name: 'skills_overview.md', content: generatedFiles['skills'] };
+  allFiles['readme'] = { name: 'README.md', content: generatedFiles['readme'] };
+
+  // Add individual skill files
+  for (const skill of data.skills) {
+    const k = 'skill_' + skill.toLowerCase().replace(/\s+/g,'_');
+    allFiles[k] = { name: `skill_${skill.toLowerCase().replace(/\s+/g,'_')}.md`, content: generatedFiles[k] };
+  }
+
+  window._generatedFiles = allFiles;
+
+  // Build tabs
+  const tabsEl = document.getElementById('fileTabs');
+  tabsEl.innerHTML = '';
+  Object.entries(allFiles).forEach(([key, file], i) => {
+    const btn = document.createElement('button');
+    btn.className = 'file-tab' + (i === 0 ? ' active' : '');
+    btn.textContent = file.name;
+    btn.onclick = () => showFile(key, file.name, file.content, btn);
+    tabsEl.appendChild(btn);
+  });
+
+  // Show first file
+  const first = Object.entries(allFiles)[0];
+  showFile(first[0], first[1].name, first[1].content, tabsEl.firstChild);
+
+  const count = Object.keys(allFiles).length;
+  document.getElementById('outputSummary').textContent = `${count} files generated · Ready to upload to GitHub`;
+}
+
+function showFile(key, name, content, tabEl) {
+  activeFile = { name, content };
+  document.getElementById('activeFileName').textContent = name;
+  document.getElementById('activeFileContent').textContent = content;
+  document.querySelectorAll('.file-tab').forEach(t => t.classList.remove('active'));
+  if (tabEl) tabEl.classList.add('active');
+}
+
+function copyActiveFile() {
+  if (!activeFile) return;
+  navigator.clipboard.writeText(activeFile.content).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
+// ── DOWNLOAD ALL ──
+async function downloadAll() {
+  // Use JSZip if available, otherwise download files individually
+  const files = window._generatedFiles;
+  if (!files) return;
+
+  // Try to use JSZip
+  try {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    document.head.appendChild(script);
+    await new Promise((resolve, reject) => {
+      script.onload = resolve;
+      script.onerror = reject;
+    });
+
+    const zip = new JSZip();
+    Object.values(files).forEach(file => {
+      zip.file(file.name, file.content);
+    });
+
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'my-claude-context-repo.zip';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    // Fallback: download files individually
+    Object.values(files).forEach((file, i) => {
+      setTimeout(() => {
+        const blob = new Blob([file.content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name;
+        a.click();
+        URL.revokeObjectURL(url);
+      }, i * 300);
+    });
+  }
+}
+
+function restartBuilder() {
+  location.reload();
+}
+</script>
+</body>
+</html>
