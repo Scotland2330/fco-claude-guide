@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Context File Generator | First Class Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --fco-background: #F6F5F2;
+      --fco-heading: #2F2E2D;
+      --fco-cta: #C86B45;
+      --fco-ui: #C4B7A6;
+      --fco-text: #444;
+      --fco-dark: #1a1918;
+      --fco-cta-dark: #b85a3a;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --shadow: 0 20px 60px rgba(47,46,45,0.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--fco-background);
+      color: var(--fco-heading);
+      line-height: 1.7;
+      font-size: 16px;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: rgba(47,46,45,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--fco-cta);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { height: 34px; filter: brightness(0) invert(1); }
+    .nav-back {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: #fff; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--fco-heading) 0%, var(--fco-dark) 60%, #2a1a0f 100%);
+      padding: 64px 24px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(200,107,69,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; text-align: center; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(200,107,69,0.2);
+      border: 1px solid rgba(200,107,69,0.4);
+      color: #e8a07a;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(30px, 4.5vw, 52px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .hero h1 .accent { color: var(--fco-cta); }
+    .hero-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,0.7);
+      max-width: 560px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    .hero-pills {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-pill {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.75);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 50px;
+    }
+
+    /* MAIN LAYOUT */
+    .app-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: sticky;
+      top: 80px;
+    }
+    .sidebar-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(196,183,166,0.3);
+      margin-bottom: 20px;
+    }
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--fco-cta);
+      margin-bottom: 16px;
+    }
+    .file-status-list { list-style: none; }
+    .file-status-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(196,183,166,0.2);
+      font-size: 14px;
+      color: #666;
+      transition: color 0.2s;
+    }
+    .file-status-item:last-child { border-bottom: none; }
+    .file-status-item.done { color: var(--fco-heading); font-weight: 600; }
+    .file-status-item.active { color: var(--fco-cta); font-weight: 700; }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ddd;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .file-status-item.done .status-dot { background: #2d7a4f; }
+    .file-status-item.active .status-dot { background: var(--fco-cta); animation: pulse-dot 1.5s infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+    .file-name-badge {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      background: rgba(200,107,69,0.1);
+      color: var(--fco-cta);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: auto;
+    }
+    .progress-bar-wrap {
+      background: rgba(196,183,166,0.3);
+      border-radius: 50px;
+      height: 6px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--fco-cta), #e8a07a);
+      border-radius: 50px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: #999;
+      margin-top: 8px;
+      text-align: right;
+    }
+
+    /* CHAT AREA */
+    .chat-container {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(196,183,166,0.3);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 600px;
+    }
+    .chat-header {
+      background: linear-gradient(135deg, var(--fco-heading), var(--fco-dark));
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .agent-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--fco-cta), var(--fco-cta-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .agent-info h4 { color: #fff; font-size: 16px; margin-bottom: 2px; }
+    .agent-info p { color: rgba(255,255,255,0.6); font-size: 13px; }
+    .agent-status {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #7ec87e;
+      font-weight: 600;
+    }
+    .agent-status::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7ec87e;
+      animation: pulse-dot 2s infinite;
+    }
+
+    /* MESSAGES */
+    .chat-messages {
+      flex: 1;
+      padding: 28px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-height: 500px;
+    }
+    .message {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .message.user { flex-direction: row-reverse; }
+    .msg-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .message.agent .msg-avatar { background: linear-gradient(135deg, var(--fco-cta), var(--fco-cta-dark)); }
+    .message.user .msg-avatar { background: var(--fco-heading); }
+    .msg-bubble {
+      max-width: 75%;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .message.agent .msg-bubble {
+      background: #f6f5f2;
+      border-radius: 4px 16px 16px 16px;
+      color: var(--fco-heading);
+    }
+    .message.user .msg-bubble {
+      background: var(--fco-cta);
+      color: #fff;
+      border-radius: 16px 4px 16px 16px;
+    }
+    .msg-bubble strong { font-weight: 700; }
+    .msg-bubble ul { padding-left: 18px; margin-top: 8px; }
+    .msg-bubble li { margin-bottom: 4px; }
+    .msg-bubble .highlight {
+      background: rgba(200,107,69,0.12);
+      border-left: 3px solid var(--fco-cta);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 12px;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    /* TYPING INDICATOR */
+    .typing-indicator {
+      display: none;
+      gap: 12px;
+      align-items: center;
+    }
+    .typing-indicator.visible { display: flex; }
+    .typing-dots {
+      background: #f6f5f2;
+      border-radius: 4px 16px 16px 16px;
+      padding: 14px 18px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--fco-ui);
+      animation: bounce 1.2s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-8px)} }
+
+    /* QUICK REPLIES */
+    .quick-replies {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 0 28px 16px;
+    }
+    .quick-reply {
+      background: rgba(200,107,69,0.08);
+      border: 1px solid rgba(200,107,69,0.25);
+      color: var(--fco-cta);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Barlow', sans-serif;
+    }
+    .quick-reply:hover { background: rgba(200,107,69,0.18); border-color: var(--fco-cta); }
+
+    /* INPUT */
+    .chat-input-area {
+      padding: 16px 24px 20px;
+      border-top: 1px solid rgba(196,183,166,0.25);
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .chat-input {
+      flex: 1;
+      border: 1.5px solid rgba(196,183,166,0.5);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px;
+      color: var(--fco-heading);
+      background: #fafaf8;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      min-height: 48px;
+      max-height: 120px;
+    }
+    .chat-input:focus { border-color: var(--fco-cta); background: #fff; }
+    .chat-input::placeholder { color: #aaa; }
+    .send-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--fco-cta);
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .send-btn:hover { background: var(--fco-cta-dark); transform: translateY(-1px); }
+    .send-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+    /* OUTPUT PANEL */
+    .output-panel {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(196,183,166,0.3);
+      overflow: hidden;
+      margin-top: 32px;
+      display: none;
+    }
+    .output-panel.visible { display: block; }
+    .output-header {
+      background: linear-gradient(135deg, var(--fco-heading), var(--fco-dark));
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .output-header h3 { color: #fff; font-size: 18px; }
+    .output-header p { color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 2px; }
+    .output-tabs {
+      display: flex;
+      background: rgba(246,245,242,0.8);
+      border-bottom: 1px solid rgba(196,183,166,0.3);
+      overflow-x: auto;
+    }
+    .output-tab {
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #888;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+      font-family: 'Barlow', sans-serif;
+    }
+    .output-tab:hover { color: var(--fco-heading); }
+    .output-tab.active { color: var(--fco-cta); border-bottom-color: var(--fco-cta); }
+    .output-content { display: none; }
+    .output-content.active { display: block; }
+    .output-file {
+      background: #1e1d1c;
+      margin: 0;
+      padding: 28px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #c8d3e0;
+      white-space: pre-wrap;
+      line-height: 1.8;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .output-file .f-heading { color: #c8a0e8; }
+    .output-file .f-comment { color: #6a8a6a; }
+    .output-file .f-key { color: #e8a07a; }
+    .output-file .f-value { color: #8ec8e8; }
+    .output-actions {
+      padding: 20px 28px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(196,183,166,0.25);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .btn-primary { background: var(--fco-cta); color: #fff; }
+    .btn-primary:hover { background: var(--fco-cta-dark); transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--fco-heading); border-color: rgba(196,183,166,0.6); }
+    .btn-outline:hover { border-color: var(--fco-heading); }
+    .btn-dark { background: var(--fco-heading); color: #fff; }
+    .btn-dark:hover { background: var(--fco-dark); }
+
+    /* HOW IT WORKS */
+    .how-it-works {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+    .hiw-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .hiw-card {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(47,46,45,0.07);
+      border: 1px solid rgba(196,183,166,0.25);
+      text-align: center;
+    }
+    .hiw-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--fco-cta);
+      color: #fff;
+      font-weight: 800;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+    .hiw-card h4 { font-size: 15px; margin-bottom: 8px; }
+    .hiw-card p { font-size: 13px; color: #666; line-height: 1.6; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .app-wrapper { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .hiw-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 600px) {
+      .hiw-grid { grid-template-columns: 1fr; }
+      .chat-messages { max-height: 400px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="fco_logo.png" alt="First Class Operations" />
+    </a>
+    <a href="index.html" class="nav-back">← Back to Claude Guide</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">⚡ AI File Generator</div>
+    <h1>Build Your Claude<br /><span class="accent">Context Files</span><br />in Minutes.</h1>
+    <p class="hero-sub">Answer a few questions about your business and role. The agent builds your complete set of personalised context and skills files — ready to load into Claude.</p>
+    <div class="hero-pills">
+      <span class="hero-pill">about.md</span>
+      <span class="hero-pill">brand.md</span>
+      <span class="hero-pill">workflow files</span>
+      <span class="hero-pill">skill files</span>
+      <span class="hero-pill">audience profiles</span>
+    </div>
+  </div>
+</div>
+
+<!-- How It Works -->
+<div class="how-it-works">
+  <div style="text-align:center; padding:48px 0 0;">
+    <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--fco-cta); margin-bottom:12px;">How It Works</div>
+    <h2 style="font-size:clamp(24px,3vw,36px); font-weight:900; margin-bottom:8px;">Four Steps to a Complete Claude Setup</h2>
+    <p style="color:#666; font-size:16px; max-width:520px; margin:0 auto;">No blank pages. No guessing. Just answer the questions and download your files.</p>
+  </div>
+  <div class="hiw-grid">
+    <div class="hiw-card">
+      <div class="hiw-num">1</div>
+      <h4>Tell the Agent About You</h4>
+      <p>Answer questions about your role, business, communication style, and goals. Takes about 5 minutes.</p>
+    </div>
+    <div class="hiw-card">
+      <div class="hiw-num">2</div>
+      <h4>Define Your Brand Voice</h4>
+      <p>Describe your tone, language rules, and what makes your communication distinctive. Claude will match it.</p>
+    </div>
+    <div class="hiw-card">
+      <div class="hiw-num">3</div>
+      <h4>Choose Your Skills Files</h4>
+      <p>Select the task types you do most often. The agent builds a skills file for each one with your methodology.</p>
+    </div>
+    <div class="hiw-card">
+      <div class="hiw-num">4</div>
+      <h4>Download &amp; Load</h4>
+      <p>Download your complete file set. Drop the folder into Claude Cowork. You're ready to go.</p>
+    </div>
+  </div>
+</div>
+
+<!-- App -->
+<div class="app-wrapper">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-title">Files Being Built</div>
+      <ul class="file-status-list" id="file-status-list">
+        <li class="file-status-item active" id="status-about">
+          <span class="status-dot"></span>
+          <span>About Me</span>
+          <span class="file-name-badge">about.md</span>
+        </li>
+        <li class="file-status-item" id="status-brand">
+          <span class="status-dot"></span>
+          <span>Brand Voice</span>
+          <span class="file-name-badge">brand.md</span>
+        </li>
+        <li class="file-status-item" id="status-workflow">
+          <span class="status-dot"></span>
+          <span>Workflow</span>
+          <span class="file-name-badge">workflow.md</span>
+        </li>
+        <li class="file-status-item" id="status-skills">
+          <span class="status-dot"></span>
+          <span>Skills Files</span>
+          <span class="file-name-badge">skill_*.md</span>
+        </li>
+        <li class="file-status-item" id="status-audience">
+          <span class="status-dot"></span>
+          <span>Audience Profiles</span>
+          <span class="file-name-badge">audience.md</span>
+        </li>
+      </ul>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-label" id="progress-label">0% complete</div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">Quick Tips</div>
+      <p style="font-size:13px; color:#666; line-height:1.7;">Be specific. Vague answers produce vague files. The more detail you give, the more useful your files will be.</p>
+      <p style="font-size:13px; color:#666; line-height:1.7; margin-top:12px;">You can edit the generated files after downloading — treat them as a strong first draft.</p>
+    </div>
+  </div>
+
+  <!-- Chat + Output -->
+  <div>
+    <!-- Chat -->
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="agent-avatar">⚙</div>
+        <div class="agent-info">
+          <h4>FCO File Builder</h4>
+          <p>Powered by First Class Operations</p>
+        </div>
+        <div class="agent-status">Online</div>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <!-- Messages injected by JS -->
+      </div>
+
+      <div class="typing-indicator" id="typing-indicator">
+        <div class="msg-avatar agent-avatar" style="width:36px;height:36px;font-size:16px;">⚙</div>
+        <div class="typing-dots">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+
+      <div class="quick-replies" id="quick-replies"></div>
+
+      <div class="chat-input-area">
+        <textarea
+          class="chat-input"
+          id="chat-input"
+          placeholder="Type your answer here..."
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+
+    <!-- Output Panel -->
+    <div class="output-panel" id="output-panel">
+      <div class="output-header">
+        <div>
+          <h3>Your Generated Files</h3>
+          <p>Review each file below. Copy the content or download all files as a zip.</p>
+        </div>
+      </div>
+      <div class="output-tabs" id="output-tabs"></div>
+      <div id="output-contents"></div>
+      <div class="output-actions">
+        <button class="btn btn-primary" onclick="downloadAllFiles()">⬇ Download All Files (.zip)</button>
+        <button class="btn btn-outline" onclick="copyCurrentFile()">📋 Copy Current File</button>
+        <a href="index.html#build-md" class="btn btn-dark">← Back to Guide</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================================================
+// CONVERSATION FLOW ENGINE
+// ===================================================
+
+const STEPS = [
+  {
+    id: 'welcome',
+    phase: null,
+    agent: `Welcome! I'm the FCO File Builder. I'll ask you a series of questions and generate a complete set of personalised Claude context files for you.\n\nThese files will make Claude sound like you, follow your processes, and produce outputs that reflect your actual standards — not generic AI output.\n\nLet's start. <strong>What is your name and your role or job title?</strong>`,
+    field: 'name_role',
+    placeholder: 'e.g. Sarah — Head of Operations at a £5M consulting firm',
+    quickReplies: []
+  },
+  {
+    id: 'business',
+    phase: 'about',
+    agent: `Got it. Now tell me about your business. <strong>What does your business do, who do you serve, and roughly what size is it?</strong>\n\nBe specific — Claude will use this to understand the context of everything you ask it to do.`,
+    field: 'business',
+    placeholder: 'e.g. We run a B2B SaaS platform for logistics companies, 25 employees, £3M ARR',
+    quickReplies: []
+  },
+  {
+    id: 'goals',
+    phase: 'about',
+    agent: `Excellent. <strong>What are your top 3 priorities or goals right now?</strong>\n\nThese go into your about.md file so Claude always understands what you're working towards.`,
+    field: 'goals',
+    placeholder: 'e.g. 1. Close 5 new enterprise deals  2. Reduce churn below 5%  3. Launch new product feature',
+    quickReplies: []
+  },
+  {
+    id: 'tone',
+    phase: 'brand',
+    agent: `Now let's build your brand voice file. <strong>How would you describe your communication style in 3 words?</strong>\n\nThink about how your best colleagues would describe how you write and speak.`,
+    field: 'tone_words',
+    placeholder: 'e.g. Direct, confident, no-nonsense',
+    quickReplies: ['Direct and concise', 'Warm but professional', 'Data-driven and precise', 'Conversational and clear', 'Authoritative and strategic']
+  },
+  {
+    id: 'avoid',
+    phase: 'brand',
+    agent: `Good. <strong>What words, phrases, or styles do you actively avoid in your writing?</strong>\n\nThis is one of the most powerful things you can give Claude — knowing what NOT to do.`,
+    field: 'avoid',
+    placeholder: 'e.g. Jargon, passive voice, "circle back", "leverage" as a verb, exclamation marks, filler phrases',
+    quickReplies: ['Corporate jargon and buzzwords', 'Passive voice', 'Overly formal language', 'Filler phrases like "it\'s worth noting"', 'Exclamation marks in formal content']
+  },
+  {
+    id: 'audience',
+    phase: 'brand',
+    agent: `<strong>Who is your primary audience?</strong> Describe the person you're most often writing for — their role, what they care about, and what they respond to.`,
+    field: 'audience_desc',
+    placeholder: 'e.g. Founders and CEOs of £1M–£10M businesses. They\'re time-poor, results-focused, and respond to specificity and ROI framing.',
+    quickReplies: []
+  },
+  {
+    id: 'workflow_task',
+    phase: 'workflow',
+    agent: `Now let's build a workflow file. <strong>What is the most important recurring task in your work?</strong>\n\nThis is the task you do most often that needs to be done consistently well — proposals, reports, client updates, content, etc.`,
+    field: 'workflow_task',
+    placeholder: 'e.g. Writing client proposals, Monthly reporting, Content creation, Client onboarding',
+    quickReplies: ['Writing proposals', 'Monthly/quarterly reporting', 'Client onboarding', 'Content & newsletter writing', 'Hiring & recruitment', 'Financial modelling']
+  },
+  {
+    id: 'workflow_steps',
+    phase: 'workflow',
+    agent: `Great. Walk me through <strong>how you do that task step by step</strong>. What do you do first, second, third? What are the non-negotiables?\n\nEven rough notes are fine — I'll turn them into a proper workflow file.`,
+    field: 'workflow_steps',
+    placeholder: 'e.g. 1. Review client discovery notes  2. Identify their core pain  3. Draft problem statement in their words  4. Outline 3-phase approach  5. Write investment section last',
+    quickReplies: []
+  },
+  {
+    id: 'skill_types',
+    phase: 'skills',
+    agent: `Now let's create your skills files. <strong>Which of these task types do you do regularly?</strong> Select all that apply — I'll build a dedicated skills file for each one.`,
+    field: 'skill_types',
+    placeholder: 'e.g. Financial analysis, Content writing, Client research, SOP creation',
+    quickReplies: ['Financial analysis', 'Content & copywriting', 'Client/prospect research', 'SOP & process documentation', 'Strategic planning', 'Data analysis & reporting', 'Email & communication drafting', 'Presentation building']
+  },
+  {
+    id: 'skill_standards',
+    phase: 'skills',
+    agent: `For those tasks, <strong>what are your quality standards?</strong> What separates a good output from a great one in your world?\n\nThink about what you always check for, what you always fix, and what makes you proud of a piece of work.`,
+    field: 'skill_standards',
+    placeholder: 'e.g. Always cite sources, never use vague language, every recommendation must have a metric attached, max 2 pages for any report',
+    quickReplies: []
+  },
+  {
+    id: 'audience_profiles',
+    phase: 'audience',
+    agent: `Almost done. Let's build your audience profiles file. <strong>Describe your 2 most important client or customer types.</strong>\n\nFor each one: their role, their main pain point, what they fear, and what they respond to.`,
+    field: 'audience_profiles',
+    placeholder: 'e.g. Profile 1: Operations Director at a £5M firm — pain: no documented processes, fear: being seen as slow, responds to: frameworks and quick wins.\nProfile 2: Founder scaling to £10M — pain: everything runs through them, responds to: ROI and specificity.',
+    quickReplies: []
+  },
+  {
+    id: 'writing_sample',
+    phase: 'about',
+    agent: `Last question. <strong>Paste in one example of writing you're proud of.</strong>\n\nThis could be an email, a LinkedIn post, a proposal intro, or any piece of writing that sounds like you at your best. Claude will learn your style from this example.\n\n(You can skip this by typing "skip" — but it significantly improves the output.)`,
+    field: 'writing_sample',
+    placeholder: 'Paste your best email, post, or paragraph here...',
+    quickReplies: ['Skip this step']
+  }
+];
+
+// State
+let currentStep = 0;
+let answers = {};
+let isTyping = false;
+
+// DOM refs
+const messagesEl = document.getElementById('chat-messages');
+const typingEl = document.getElementById('typing-indicator');
+const quickRepliesEl = document.getElementById('quick-replies');
+const inputEl = document.getElementById('chat-input');
+const sendBtn = document.getElementById('send-btn');
+
+// Init
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => showAgentMessage(STEPS[0].agent, STEPS[0].quickReplies), 600);
+});
+
+function showAgentMessage(text, replies = []) {
+  typingEl.classList.add('visible');
+  sendBtn.disabled = true;
+  scrollToBottom();
+
+  setTimeout(() => {
+    typingEl.classList.remove('visible');
+    sendBtn.disabled = false;
+
+    const msg = document.createElement('div');
+    msg.className = 'message agent';
+    msg.innerHTML = `
+      <div class="msg-avatar agent-avatar" style="width:36px;height:36px;font-size:16px;">⚙</div>
+      <div class="msg-bubble">${text.replace(/\n/g, '<br/>')}</div>
+    `;
+    messagesEl.appendChild(msg);
+
+    // Quick replies
+    quickRepliesEl.innerHTML = '';
+    if (replies && replies.length > 0) {
+      replies.forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = 'quick-reply';
+        btn.textContent = r;
+        btn.onclick = () => {
+          inputEl.value = r;
+          sendMessage();
+        };
+        quickRepliesEl.appendChild(btn);
+      });
+    }
+
+    scrollToBottom();
+
+    // Update placeholder
+    if (STEPS[currentStep]) {
+      inputEl.placeholder = STEPS[currentStep].placeholder || 'Type your answer...';
+    }
+  }, 1200 + Math.random() * 400);
+}
+
+function showUserMessage(text) {
+  const msg = document.createElement('div');
+  msg.className = 'message user';
+  msg.innerHTML = `
+    <div class="msg-avatar" style="width:36px;height:36px;font-size:16px;background:var(--fco-heading);border-radius:50%;display:flex;align-items:center;justify-content:center;">👤</div>
+    <div class="msg-bubble">${text}</div>
+  `;
+  messagesEl.appendChild(msg);
+  scrollToBottom();
+}
+
+function sendMessage() {
+  const text = inputEl.value.trim();
+  if (!text || isTyping) return;
+
+  showUserMessage(text);
+  inputEl.value = '';
+  autoResize(inputEl);
+  quickRepliesEl.innerHTML = '';
+
+  // Save answer
+  if (STEPS[currentStep]) {
+    answers[STEPS[currentStep].field] = text;
+    updateProgress(STEPS[currentStep].phase);
+  }
+
+  currentStep++;
+
+  if (currentStep < STEPS.length) {
+    setTimeout(() => {
+      showAgentMessage(STEPS[currentStep].agent, STEPS[currentStep].quickReplies);
+    }, 300);
+  } else {
+    // All done — generate files
+    setTimeout(() => {
+      showAgentMessage(`That's everything I need. Give me a moment to build your files...`, []);
+      setTimeout(() => {
+        generateFiles();
+      }, 2000);
+    }, 300);
+  }
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function scrollToBottom() {
+  setTimeout(() => {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }, 50);
+}
+
+// ===================================================
+// PROGRESS TRACKING
+// ===================================================
+const phaseOrder = ['about', 'brand', 'workflow', 'skills', 'audience'];
+const completedPhases = new Set();
+
+function updateProgress(phase) {
+  if (!phase) return;
+  completedPhases.add(phase);
+
+  // Count steps answered per phase
+  const phaseSteps = STEPS.filter(s => s.phase === phase);
+  const answeredInPhase = phaseSteps.filter(s => answers[s.field]).length;
+
+  if (answeredInPhase >= phaseSteps.length) {
+    const statusEl = document.getElementById('status-' + phase);
+    if (statusEl) {
+      statusEl.classList.remove('active');
+      statusEl.classList.add('done');
+    }
+    // Activate next
+    const nextPhaseIdx = phaseOrder.indexOf(phase) + 1;
+    if (nextPhaseIdx < phaseOrder.length) {
+      const nextEl = document.getElementById('status-' + phaseOrder[nextPhaseIdx]);
+      if (nextEl) nextEl.classList.add('active');
+    }
+  }
+
+  const totalAnswered = Object.keys(answers).length;
+  const pct = Math.round((totalAnswered / STEPS.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = pct + '% complete';
+}
+
+// ===================================================
+// FILE GENERATION
+// ===================================================
+let generatedFiles = {};
+
+function generateFiles() {
+  const a = answers;
+  const nameRole = a.name_role || 'Your Name — Your Role';
+  const business = a.business || 'Your business description';
+  const goals = a.goals || '1. Goal one\n2. Goal two\n3. Goal three';
+  const toneWords = a.tone_words || 'Direct, confident, professional';
+  const avoid = a.avoid || 'Jargon, passive voice, filler phrases';
+  const audienceDesc = a.audience_desc || 'Your target audience';
+  const workflowTask = a.workflow_task || 'Key recurring task';
+  const workflowSteps = a.workflow_steps || 'Step 1...\nStep 2...\nStep 3...';
+  const skillTypes = a.skill_types || 'Content writing, Analysis';
+  const skillStandards = a.skill_standards || 'High quality, specific, actionable';
+  const audienceProfiles = a.audience_profiles || 'Profile 1: ...\nProfile 2: ...';
+  const writingSample = (a.writing_sample && a.writing_sample.toLowerCase() !== 'skip this step') ? a.writing_sample : '[Paste your best writing example here]';
+
+  const goalsFormatted = goals.split('\n').map((g,i) => `${i+1}. ${g.replace(/^\d+\.\s*/,'')}`).join('\n');
+
+  // about.md
+  generatedFiles['about.md'] = `# About Me — ${nameRole}
+
+## Role & Context
+${business}
+
+## Communication Style
+Tone: ${toneWords}
+Avoid: ${avoid}
+
+## My Goals This Quarter
+${goalsFormatted}
+
+## Example of My Writing
+${writingSample}
+
+## How to Work With Me
+- Always read this file before starting any task
+- Ask clarifying questions before executing — do not assume
+- Match my tone and format in every output
+- If you are unsure about direction, ask rather than guess`;
+
+  // brand.md
+  const toneArr = toneWords.split(/[,\/]/).map(t => t.trim());
+  generatedFiles['brand.md'] = `# Brand & Voice Guidelines
+
+## Positioning
+Audience: ${audienceDesc}
+
+## Tone of Voice
+Primary tone: ${toneArr[0] || 'Direct and confident'}
+Secondary tone: ${toneArr[1] || 'Practical and action-oriented'}
+
+## Language Rules
+DO use:
+- Clear, specific language with concrete examples
+- Active voice ("we decided" not "it was decided")
+- Short sentences and paragraphs
+- Headers to structure longer content
+
+DO NOT use:
+- ${avoid.split(/[,\n]/).map(s=>s.trim()).filter(Boolean).join('\n- ')}
+
+## Formatting Standards
+- Short paragraphs (3–4 lines maximum)
+- Headers for anything over 200 words
+- Bullet points only when listing 3+ items
+- No exclamation marks in formal content
+
+## Output Checklist
+Before delivering any output, confirm:
+[ ] Tone matches the guidelines above
+[ ] No avoided words or phrases used
+[ ] Format matches the standards above
+[ ] Written for the right audience`;
+
+  // workflow.md
+  const wfName = workflowTask.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+  const wfStepsFormatted = workflowSteps.split('\n').map((s,i) => {
+    const clean = s.replace(/^\d+\.\s*/,'').trim();
+    return clean ? `## Step ${i+1}: ${clean}` : '';
+  }).filter(Boolean).join('\n\n');
+
+  generatedFiles[`workflow_${wfName}.md`] = `# Workflow: ${workflowTask}
+
+## Purpose
+This workflow defines the exact process for: ${workflowTask}
+Follow this process in order. Do not skip steps.
+
+${wfStepsFormatted}
+
+## Quality Standards
+- Every output must be reviewed against this workflow before delivery
+- If information is missing for any step, ask before proceeding
+- Flag any assumptions you are making
+
+## Rules
+- ALWAYS follow the steps in order
+- NEVER skip the clarification step
+- Ask questions if the brief is unclear before starting work`;
+
+  // skills files
+  const skillList = skillTypes.split(/[,\n]/).map(s => s.trim()).filter(Boolean);
+  skillList.forEach(skill => {
+    const skillSlug = skill.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+    generatedFiles[`skill_${skillSlug}.md`] = `# SKILL: ${skill}
+# Version: 1.0
+# Use When: Any task involving ${skill.toLowerCase()}
+
+## PURPOSE
+Guide Claude to produce ${skill.toLowerCase()} outputs that meet professional standards and reflect the operator's methodology.
+
+## CONTEXT
+This skill is used by: ${nameRole}
+Business context: ${business.substring(0, 120)}...
+
+## PROCESS
+Step 1: Read all context files before starting
+Step 2: Clarify the specific goal and audience for this task
+Step 3: Draft the output following the quality standards below
+Step 4: Review against the checklist before delivering
+
+## QUALITY STANDARDS
+- ${skillStandards.split(/[,\n]/).map(s=>s.trim()).filter(Boolean).join('\n- ')}
+- Every output must be specific and actionable
+- Flag any assumptions or gaps in the brief
+
+## OUTPUT FORMAT
+- Match the tone and format from brand.md
+- Use clear headers for structured content
+- Keep outputs concise — cut anything that doesn't add value
+
+## RULES
+- NEVER produce vague or generic output
+- ALWAYS ask clarifying questions if the brief is incomplete
+- NEVER include filler phrases or padding
+- ALWAYS present options when there is genuine ambiguity`;
+  });
+
+  // audience_profiles.md
+  const profiles = audienceProfiles.split(/\n(?=Profile\s*\d|profile\s*\d|\d\.)/i).filter(Boolean);
+  const profilesFormatted = profiles.map((p, i) => {
+    return `## Profile ${i+1}\n${p.replace(/^Profile\s*\d+:?\s*/i, '').trim()}`;
+  }).join('\n\n');
+
+  generatedFiles['audience_profiles.md'] = `# Audience Profiles
+
+## Overview
+These profiles define the key people I write for and communicate with.
+Claude should reference these profiles to tailor every output to the right reader.
+
+${profilesFormatted || `## Profile 1: Primary Audience\n${audienceDesc}`}
+
+## How to Use These Profiles
+- Before writing any external content, identify which profile it is for
+- Adjust tone, complexity, and framing to match that profile
+- Lead with what matters most to that specific person`;
+
+  // Show output panel
+  renderOutputPanel();
+
+  showAgentMessage(`Your files are ready! I've built <strong>${Object.keys(generatedFiles).length} files</strong> for you:\n\n${Object.keys(generatedFiles).map(f => `• ${f}`).join('\n')}\n\nScroll down to review each file, copy the content, or download them all as a zip. Load the folder into Claude Cowork and you're ready to go.`, []);
+
+  // Mark all complete
+  phaseOrder.forEach(p => {
+    const el = document.getElementById('status-' + p);
+    if (el) { el.classList.remove('active'); el.classList.add('done'); }
+  });
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('progress-label').textContent = '100% complete — files ready!';
+}
+
+function renderOutputPanel() {
+  const panel = document.getElementById('output-panel');
+  const tabsEl = document.getElementById('output-tabs');
+  const contentsEl = document.getElementById('output-contents');
+
+  tabsEl.innerHTML = '';
+  contentsEl.innerHTML = '';
+
+  const fileNames = Object.keys(generatedFiles);
+  fileNames.forEach((name, i) => {
+    // Tab
+    const tab = document.createElement('div');
+    tab.className = 'output-tab' + (i === 0 ? ' active' : '');
+    tab.textContent = name;
+    tab.dataset.file = name;
+    tab.onclick = () => switchOutputTab(name);
+    tabsEl.appendChild(tab);
+
+    // Content
+    const content = document.createElement('div');
+    content.className = 'output-content' + (i === 0 ? ' active' : '');
+    content.id = 'out-' + name.replace(/[^a-z0-9]/gi, '_');
+    content.innerHTML = `<pre class="output-file">${escapeHtml(generatedFiles[name])}</pre>`;
+    contentsEl.appendChild(content);
+  });
+
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function switchOutputTab(name) {
+  document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.output-content').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.output-tab[data-file="${name}"]`).classList.add('active');
+  document.getElementById('out-' + name.replace(/[^a-z0-9]/gi, '_')).classList.add('active');
+}
+
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function copyCurrentFile() {
+  const activeContent = document.querySelector('.output-content.active pre');
+  if (!activeContent) return;
+  navigator.clipboard.writeText(activeContent.innerText).then(() => {
+    const btn = document.querySelector('.output-actions .btn-outline');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+
+function downloadAllFiles() {
+  // Build a simple zip-like download using individual file downloads
+  // Since we can't use JSZip without a CDN, we'll create a single combined .txt
+  // and also trigger individual downloads
+  const fileNames = Object.keys(generatedFiles);
+
+  // Create a combined manifest
+  let combined = `# FCO Claude Context Files\n# Generated by First Class Operations File Builder\n# Load these files into your Claude Cowork folder\n\n`;
+  combined += `Files included:\n${fileNames.map(f => `- ${f}`).join('\n')}\n\n`;
+  combined += `${'='.repeat(60)}\n\n`;
+  fileNames.forEach(name => {
+    combined += `FILE: ${name}\n${'='.repeat(60)}\n${generatedFiles[name]}\n\n${'='.repeat(60)}\n\n`;
+  });
+
+  const blob = new Blob([combined], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'fco_claude_context_files.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  // Also trigger individual downloads with a small delay
+  fileNames.forEach((name, i) => {
+    setTimeout(() => {
+      const b = new Blob([generatedFiles[name]], { type: 'text/plain' });
+      const u = URL.createObjectURL(b);
+      const el = document.createElement('a');
+      el.href = u;
+      el.download = name;
+      el.click();
+      URL.revokeObjectURL(u);
+    }, (i + 1) * 400);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mastering Claude | First Class Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== ROOT VARIABLES ===== */
+    :root {
+      --fco-background: #F6F5F2;
+      --fco-heading: #2F2E2D;
+      --fco-cta: #C86B45;
+      --fco-ui: #C4B7A6;
+      --fco-text: #444;
+      --fco-dark: #1a1918;
+      --fco-cta-dark: #b85a3a;
+      --fco-white: #ffffff;
+      --fco-light-bg: rgba(255,255,255,0.95);
+      --shadow-soft: 0 20px 60px rgba(47,46,45,0.10);
+      --shadow-card: 0 8px 32px rgba(47,46,45,0.12);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--fco-background);
+      color: var(--fco-heading);
+      line-height: 1.7;
+      font-size: 17px;
+      overflow-x: hidden;
+    }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ===== NAVIGATION ===== */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(47,46,45,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--fco-cta);
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .nav-logo img {
+      height: 38px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(200,107,69,0.25); }
+    .nav-links .nav-cta {
+      background: var(--fco-cta);
+      color: #fff !important;
+      font-weight: 700;
+    }
+    .nav-links .nav-cta:hover { background: var(--fco-cta-dark) !important; }
+    .nav-hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+    .nav-hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s; }
+
+    /* ===== PROGRESS BAR ===== */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--fco-cta);
+      width: 0%;
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--fco-heading) 0%, var(--fco-dark) 60%, #2a1a0f 100%);
+      padding: 100px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(200,107,69,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(196,183,166,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(200,107,69,0.2);
+      border: 1px solid rgba(200,107,69,0.4);
+      color: #e8a07a;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .hero-badge::before { content: '●'; font-size: 8px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .hero h1 {
+      font-size: clamp(38px, 5.5vw, 68px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -1px;
+    }
+    .hero h1 .accent { color: var(--fco-cta); }
+    .hero-sub {
+      font-size: clamp(17px, 2vw, 21px);
+      color: rgba(255,255,255,0.72);
+      max-width: 640px;
+      margin-bottom: 44px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s;
+      border: 2px solid transparent;
+      letter-spacing: 0.3px;
+    }
+    .btn-primary {
+      background: var(--fco-cta);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--fco-cta-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,107,69,0.4); }
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border-color: rgba(255,255,255,0.35);
+    }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 64px;
+      flex-wrap: wrap;
+    }
+    .hero-stat { }
+    .hero-stat-num {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--fco-cta);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 500;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== SECTION SYSTEM ===== */
+    .section {
+      background: var(--fco-light-bg);
+      border-radius: var(--radius);
+      padding: 64px 48px;
+      margin-bottom: 48px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+    .section-dark {
+      background: linear-gradient(135deg, var(--fco-heading), var(--fco-dark));
+      color: #fff;
+    }
+    .section-warm {
+      background: linear-gradient(135deg, var(--fco-cta), var(--fco-cta-dark));
+      color: #fff;
+    }
+    .section-muted {
+      background: linear-gradient(135deg, #f0ede8, #e8e3dc);
+    }
+    .sections-wrapper { padding: 64px 24px; }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--fco-cta);
+      margin-bottom: 16px;
+    }
+    .section-dark .section-label { color: #e8a07a; }
+    .section-warm .section-label { color: rgba(255,255,255,0.85); }
+    h2 {
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    h3 {
+      font-size: clamp(20px, 2.5vw, 26px);
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.3px;
+    }
+    h4 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .section-intro {
+      font-size: 18px;
+      color: var(--fco-text);
+      max-width: 720px;
+      margin-bottom: 48px;
+      line-height: 1.7;
+    }
+    .section-dark .section-intro { color: rgba(255,255,255,0.75); }
+    .section-warm .section-intro { color: rgba(255,255,255,0.9); }
+
+    /* ===== TOOL OVERVIEW GRID ===== */
+    .tools-overview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+    .tool-card {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 28px 24px;
+      border: 1px solid rgba(196,183,166,0.3);
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--fco-cta);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+    .tool-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(47,46,45,0.15); }
+    .tool-card:hover::before { transform: scaleX(1); }
+    .tool-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(200,107,69,0.12), rgba(200,107,69,0.06));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(200,107,69,0.2);
+    }
+    .tool-number {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--fco-cta);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .tool-card h4 { font-size: 17px; margin-bottom: 8px; }
+    .tool-card p { font-size: 14px; color: #666; line-height: 1.6; }
+    .tool-card .tool-tag {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--fco-cta);
+      background: rgba(200,107,69,0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* ===== ACCORDION / TOOL DETAIL ===== */
+    .tool-detail {
+      border: 1px solid rgba(196,183,166,0.4);
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .tool-detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px;
+      cursor: pointer;
+      transition: background 0.2s;
+      user-select: none;
+    }
+    .tool-detail-header:hover { background: rgba(200,107,69,0.04); }
+    .tool-detail-header-left { display: flex; align-items: center; gap: 16px; }
+    .tool-detail-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--fco-cta);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .tool-detail-header h3 { font-size: 20px; margin: 0; }
+    .tool-detail-header .tool-detail-sub { font-size: 14px; color: #888; margin-top: 2px; font-weight: 400; }
+    .tool-detail-chevron {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(200,107,69,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      flex-shrink: 0;
+      font-size: 18px;
+      color: var(--fco-cta);
+    }
+    .tool-detail.open .tool-detail-chevron { transform: rotate(180deg); background: var(--fco-cta); color: #fff; }
+    .tool-detail-body {
+      display: none;
+      padding: 0 28px 32px;
+      border-top: 1px solid rgba(196,183,166,0.3);
+    }
+    .tool-detail.open .tool-detail-body { display: block; }
+    .tool-detail-body .body-intro {
+      font-size: 16px;
+      color: var(--fco-text);
+      margin-top: 24px;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+
+    /* ===== STEPS ===== */
+    .steps-list { list-style: none; counter-reset: steps; }
+    .steps-list li {
+      counter-increment: steps;
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+    .steps-list li::before {
+      content: counter(steps);
+      min-width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--fco-cta);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .steps-list li span { font-size: 15px; color: var(--fco-text); line-height: 1.6; }
+    .steps-list li strong { color: var(--fco-heading); }
+
+    /* ===== CODE BLOCKS ===== */
+    .code-block {
+      background: #1e1d1c;
+      border-radius: var(--radius-sm);
+      padding: 24px 28px;
+      margin: 20px 0;
+      position: relative;
+      border-left: 3px solid var(--fco-cta);
+    }
+    .code-block pre {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      color: #e8e3dc;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.7;
+    }
+    .code-block .code-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--fco-cta);
+      margin-bottom: 12px;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(200,107,69,0.2);
+      border: 1px solid rgba(200,107,69,0.4);
+      color: #e8a07a;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Barlow', sans-serif;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: var(--fco-cta); color: #fff; }
+    .copy-btn.copied { background: #2d7a4f; border-color: #2d7a4f; color: #fff; }
+
+    /* ===== USE CASE GRID ===== */
+    .use-cases-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .use-case-card {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 28px;
+      border: 1px solid rgba(196,183,166,0.3);
+      box-shadow: var(--shadow-card);
+      transition: all 0.25s;
+    }
+    .use-case-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(47,46,45,0.12); }
+    .use-case-card .uc-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .use-case-card h4 { font-size: 17px; margin-bottom: 8px; color: var(--fco-heading); }
+    .use-case-card p { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 16px; }
+    .use-case-card .uc-prompt {
+      background: #f6f5f2;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #555;
+      font-style: italic;
+      border-left: 3px solid var(--fco-cta);
+      line-height: 1.6;
+    }
+
+    /* ===== FILE BUILDER ===== */
+    .file-builder {
+      background: #1e1d1c;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-top: 32px;
+    }
+    .file-builder-tabs {
+      display: flex;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .file-tab {
+      padding: 14px 24px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      font-family: 'Barlow', sans-serif;
+    }
+    .file-tab:hover { color: rgba(255,255,255,0.8); }
+    .file-tab.active { color: #e8a07a; border-bottom-color: var(--fco-cta); }
+    .file-tab-content { display: none; padding: 28px; }
+    .file-tab-content.active { display: block; }
+    .file-tab-content pre {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13px;
+      color: #c8d3e0;
+      white-space: pre-wrap;
+      line-height: 1.8;
+    }
+    .file-tab-content .comment { color: #6a8a6a; }
+    .file-tab-content .key { color: #e8a07a; }
+    .file-tab-content .value { color: #8ec8e8; }
+    .file-tab-content .heading { color: #c8a0e8; }
+
+    /* ===== TIMELINE ===== */
+    .timeline {
+      position: relative;
+      margin-top: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 24px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--fco-cta), rgba(200,107,69,0.1));
+    }
+    .timeline-item {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 36px;
+      position: relative;
+    }
+    .timeline-dot {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--fco-cta);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+      z-index: 1;
+      box-shadow: 0 4px 16px rgba(200,107,69,0.4);
+    }
+    .timeline-content {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 24px 28px;
+      flex: 1;
+      border: 1px solid rgba(196,183,166,0.3);
+      box-shadow: var(--shadow-card);
+    }
+    .timeline-time {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--fco-cta);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+    .timeline-content h4 { margin-bottom: 8px; font-size: 17px; }
+    .timeline-content p { font-size: 14px; color: #666; line-height: 1.6; }
+    .timeline-content .timeline-action {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--fco-cta);
+      background: rgba(200,107,69,0.08);
+      padding: 8px 14px;
+      border-radius: 8px;
+      display: inline-block;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .timeline-content .timeline-action:hover {
+      background: rgba(200,107,69,0.18);
+    }
+
+    /* ===== SECTION MUTED ===== */
+    .section-muted {
+      background: linear-gradient(135deg, rgba(246,245,242,0.98), rgba(240,238,234,0.98));
+      border: 1px solid rgba(196,183,166,0.35);
+    }
+
+    /* ===== STEPS LIST ===== */
+    .steps-list {
+      list-style: none;
+      counter-reset: steps;
+      padding: 0;
+    }
+    .steps-list li {
+      counter-increment: steps;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(196,183,166,0.2);
+      font-size: 15px;
+      color: var(--fco-text);
+      line-height: 1.6;
+    }
+    .steps-list li:last-child { border-bottom: none; }
+    .steps-list li::before {
+      content: counter(steps);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--fco-cta);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ===== CALLOUT / HIGHLIGHT BOXES ===== */
+    .callout {
+      border-radius: var(--radius-sm);
+      padding: 24px 28px;
+      margin: 24px 0;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .callout-tip {
+      background: rgba(200,107,69,0.08);
+      border: 1px solid rgba(200,107,69,0.2);
+    }
+    .callout-warning {
+      background: rgba(200,107,69,0.05);
+      border: 1px solid rgba(196,183,166,0.4);
+    }
+    .callout-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .callout-text { font-size: 15px; color: var(--fco-text); line-height: 1.7; }
+    .callout-text strong { color: var(--fco-heading); }
+
+    /* ===== COMPARISON TABLE ===== */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 32px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .comparison-table th {
+      background: var(--fco-heading);
+      color: #fff;
+      padding: 16px 20px;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .comparison-table th:first-child { border-radius: 0; }
+    .comparison-table td {
+      padding: 14px 20px;
+      font-size: 14px;
+      color: var(--fco-text);
+      border-bottom: 1px solid rgba(196,183,166,0.25);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table tr:nth-child(even) td { background: rgba(246,245,242,0.7); }
+    .comparison-table tr:hover td { background: rgba(200,107,69,0.05); }
+    .check { color: #2d7a4f; font-weight: 700; }
+    .cross { color: #c0392b; font-weight: 700; }
+    .partial { color: #e67e22; font-weight: 700; }
+
+    /* ===== SKILLS SECTION ===== */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .skill-card {
+      background: rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: all 0.25s;
+    }
+    .skill-card:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); }
+    .skill-card .skill-icon { font-size: 28px; margin-bottom: 12px; }
+    .skill-card h4 { color: #fff; font-size: 16px; margin-bottom: 8px; }
+    .skill-card p { color: rgba(255,255,255,0.65); font-size: 13px; line-height: 1.6; }
+    .skill-card .skill-file {
+      margin-top: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e8a07a;
+      background: rgba(200,107,69,0.15);
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ===== CRITIC SECTION ===== */
+    .critic-steps {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .critic-step {
+      background: rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      padding: 20px 22px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .critic-step .step-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #e8a07a;
+      margin-bottom: 8px;
+    }
+    .critic-step h4 { color: #fff; font-size: 15px; margin-bottom: 6px; }
+    .critic-step p { color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.6; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--fco-heading);
+      color: rgba(255,255,255,0.7);
+      padding: 60px 24px 40px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
+    .footer-brand img {
+      height: 40px;
+      filter: brightness(0) invert(1);
+      margin-bottom: 16px;
+    }
+    .footer-brand p { font-size: 14px; max-width: 280px; line-height: 1.7; }
+    .footer-links h5 {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    .footer-links ul { list-style: none; }
+    .footer-links ul li { margin-bottom: 10px; }
+    .footer-links ul li a {
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    .footer-links ul li a:hover { color: #fff; }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 28px;
+      font-size: 13px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom a { color: var(--fco-cta); text-decoration: none; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .tools-overview { grid-template-columns: repeat(2, 1fr); }
+      .use-cases-grid { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+      .critic-steps { grid-template-columns: 1fr; }
+      .section { padding: 44px 28px; }
+    }
+    @media (max-width: 640px) {
+      .tools-overview { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: rgba(47,46,45,0.98);
+        padding: 20px;
+        gap: 4px;
+        z-index: 99;
+      }
+      .hero { padding: 60px 20px 60px; }
+      .hero-stats { gap: 28px; }
+      .section { padding: 36px 20px; }
+      .tool-detail-header { padding: 18px 20px; }
+      .tool-detail-body { padding: 0 20px 24px; }
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+
+    /* ===== SCROLL TO TOP ===== */
+    #scroll-top {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--fco-cta);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(200,107,69,0.4);
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.3s;
+      z-index: 99;
+    }
+    #scroll-top.visible { opacity: 1; transform: translateY(0); }
+    #scroll-top:hover { background: var(--fco-cta-dark); transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="fco_logo.png" alt="First Class Operations" />
+    </a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#tools">The Six Tools</a></li>
+      <li><a href="#context-files">Context Files</a></li>
+      <li><a href="#skills-files">Skills Files</a></li>
+      <li><a href="#use-cases">Use Cases</a></li>
+      <li><a href="#build-md">Build MD Files</a></li>
+      <li><a href="#action-plan">Action Plan</a></li>
+      <li><a href="agent.html" class="nav-cta">File Generator →</a></li>
+    </ul>
+    <div class="nav-hamburger" id="hamburger" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">First Class Operations · AI Mastery Series</div>
+    <h1>Stop Wasting Time on the<br /><span class="accent">Wrong AI.</span><br />Master Claude.</h1>
+    <p class="hero-sub">The definitive playbook for business leaders and operators who want to turn Claude into their most productive team member — not just another chatbot.</p>
+    <div class="hero-actions">
+      <a href="#overview" class="btn btn-primary">Start the Masterclass →</a>
+      <a href="agent.html" class="btn btn-outline">⚡ Build My Files Now</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">6</div>
+        <div class="hero-stat-label">Core Tools Covered</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">30</div>
+        <div class="hero-stat-label">Minutes to Implement</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">10×</div>
+        <div class="hero-stat-label">Output Multiplier</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">$0</div>
+        <div class="hero-stat-label">Extra Cost Beyond Pro</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="sections-wrapper">
+  <div class="container">
+
+    <!-- ===== SECTION 1: OVERVIEW ===== -->
+    <section class="section fade-in" id="overview">
+      <div class="section-label">⚙ The Shift</div>
+      <h2>Claude Is Not One Tool. It Is Six.</h2>
+      <p class="section-intro">Most people open Claude, type a question, and get a generic answer. That is not how operators use it. In 2026, Claude is a complete AI workspace — and the gap between those who know this and those who don't is enormous.</p>
+
+      <div class="tools-overview">
+        <div class="tool-card fade-in fade-in-delay-1" onclick="scrollToTool(1)">
+          <div class="tool-icon">🖥</div>
+          <div class="tool-number">Tool 01</div>
+          <h4>Claude Cowork</h4>
+          <p>A desktop app that reads your actual files, builds documents, and asks clarifying questions instead of guessing.</p>
+          <span class="tool-tag">Most Important</span>
+        </div>
+        <div class="tool-card fade-in fade-in-delay-1" onclick="scrollToTool(2)">
+          <div class="tool-icon">🧠</div>
+          <div class="tool-number">Tool 02</div>
+          <h4>The Right Model</h4>
+          <p>Opus 4.6 with Extended Thinking. Forces Claude to reason before responding — like a senior advisor, not an intern.</p>
+          <span class="tool-tag">Critical Setting</span>
+        </div>
+        <div class="tool-card fade-in fade-in-delay-2" onclick="scrollToTool(3)">
+          <div class="tool-icon">📊</div>
+          <div class="tool-number">Tool 03</div>
+          <h4>Claude in Excel</h4>
+          <p>An add-in that lives inside your spreadsheet. It reads formulas, builds financial models, and explains cell logic.</p>
+          <span class="tool-tag">Finance & Ops</span>
+        </div>
+        <div class="tool-card fade-in fade-in-delay-2" onclick="scrollToTool(4)">
+          <div class="tool-icon">🔌</div>
+          <div class="tool-number">Tool 04</div>
+          <h4>Claude Plugins</h4>
+          <p>Pre-built skill packs for Sales, Marketing, Legal, Data, and more. Instant expertise with slash commands.</p>
+          <span class="tool-tag">Specialisation</span>
+        </div>
+        <div class="tool-card fade-in fade-in-delay-3" onclick="scrollToTool(5)">
+          <div class="tool-icon">⚡</div>
+          <div class="tool-number">Tool 05</div>
+          <h4>Claude Artifacts</h4>
+          <p>Interactive outputs — calculators, dashboards, trackers — built live inside the chat. Not text. Working tools.</p>
+          <span class="tool-tag">Interactive Output</span>
+        </div>
+        <div class="tool-card fade-in fade-in-delay-3" onclick="scrollToTool(6)">
+          <div class="tool-icon">📁</div>
+          <div class="tool-number">Tool 06</div>
+          <h4>Claude Projects</h4>
+          <p>Persistent context folders where Claude remembers your brand guidelines, past work, and specific data.</p>
+          <span class="tool-tag">Memory & Context</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2: THE SIX TOOLS (ACCORDION) ===== -->
+    <section class="section fade-in" id="tools">
+      <div class="section-label">⚙ Deep Dives</div>
+      <h2>Each Tool, Explained for Operators</h2>
+      <p class="section-intro">Click any tool below to expand the full setup guide, use cases, and first prompts. Start with Cowork — it is the foundation everything else is built on.</p>
+
+      <!-- Tool 1: Cowork -->
+      <div class="tool-detail open" id="tool-1">
+        <div class="tool-detail-header" onclick="toggleTool(1)">
+          <div class="tool-detail-header-left">
+            <div class="tool-detail-num">1</div>
+            <div>
+              <h3>Claude Cowork</h3>
+              <div class="tool-detail-sub">Your desktop AI co-pilot that reads your files and aligns before executing</div>
+            </div>
+          </div>
+          <div class="tool-detail-chevron">▾</div>
+        </div>
+        <div class="tool-detail-body">
+          <p class="body-intro">Claude Cowork is the single most important upgrade you can make. It lives on your computer, reads your actual files, and — crucially — asks you clarifying questions before it starts working. This alone eliminates 80% of the frustration people have with AI.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-icon">💡</div>
+            <div class="callout-text"><strong>The Mindset Shift:</strong> ChatGPT trained you to write better prompts. Claude Cowork makes that obsolete. The game is now <em>context files</em>. Feed Claude great information upfront, and you stop prompting entirely.</div>
+          </div>
+
+          <h4 style="margin-top:28px; margin-bottom:16px;">How to Install (5 Minutes)</h4>
+          <ol class="steps-list">
+            <li><span>Go to <strong>claude.com/download</strong> and download the desktop app.</span></li>
+            <li><span>You need a <strong>Pro account ($20/month)</strong> or $17/month billed annually.</span></li>
+            <li><span>Open the app and click the <strong>Cowork tab</strong> at the top.</span></li>
+            <li><span>Select a folder from your computer — this is how Claude reads your files.</span></li>
+            <li><span>Create your first <strong>context .md file</strong> (see the Context Files section below).</span></li>
+          </ol>
+
+          <h4 style="margin-top:28px; margin-bottom:12px;">The Alignment Prompt (Use This Every Time)</h4>
+          <div class="code-block">
+            <div class="code-label">📋 First Prompt Template</div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre>I want to [YOUR TASK] so that [WHAT SUCCESS LOOKS LIKE].
+
+First, read the uploaded files completely before responding.
+
+DO NOT start executing yet. Instead, ask me clarifying questions 
+so we can refine the approach together step by step.
+
+Only begin work once we've aligned on the direction.</pre>
+          </div>
+
+          <div class="callout callout-tip">
+            <div class="callout-icon">🎯</div>
+            <div class="callout-text"><strong>Why this works:</strong> Claude generates a form that forces you to be specific. If the direction is wrong, say so — Claude will generate a new form. With a 1,000,000 token context window, it never loses track of the conversation.</div>
+          </div>
+
+          <h4 style="margin-top:28px; margin-bottom:16px;">Real Business Use Cases</h4>
+          <div class="use-cases-grid">
+            <div class="use-case-card">
+              <div class="uc-icon">📝</div>
+              <h4>SOPs & Process Documentation</h4>
+              <p>Feed Claude your existing process notes and have it build a complete, formatted SOP document with decision trees.</p>
+              <div class="uc-prompt">"Read my notes on the client onboarding process and build a full SOP with a decision tree for edge cases. Ask me questions first."</div>
+            </div>
+            <div class="use-case-card">
+              <div class="uc-icon">📈</div>
+              <h4>Quarterly Business Reviews</h4>
+              <p>Upload your raw data files and have Claude synthesise them into a structured executive presentation narrative.</p>
+              <div class="uc-prompt">"Read the Q3 data files and draft a QBR narrative for the leadership team. Highlight the 3 biggest wins and 2 critical risks."</div>
+            </div>
+            <div class="use-case-card">
+              <div class="uc-icon">🤝</div>
+              <h4>Proposal & Pitch Writing</h4>
+              <p>Upload your brand guidelines, past proposals, and the client brief — Claude writes a proposal that sounds like you.</p>
+              <div class="uc-prompt">"Using my brand voice file and the client brief, write a proposal for this project. Match my tone exactly. Ask clarifying questions first."</div>
+            </div>
+            <div class="use-case-card">
+              <div class="uc-icon">🔍</div>
+              <h4>Competitive Intelligence</h4>
+              <p>Feed Claude competitor data, market reports, and your positioning doc to get a strategic gap analysis.</p>
+              <div class="uc-prompt">"Analyse these competitor profiles against our positioning. Identify our 3 strongest differentiators and 2 areas of vulnerability."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 2: Right Model -->
+      <div class="tool-detail" id="tool-2">
+        <div class="tool-detail-header" onclick="toggleTool(2)">
+          <div class="tool-detail-header-left">
+            <div class="tool-detail-num">2</div>
+            <div>
+              <h3>Use the Right Model</h3>
+              <div class="tool-detail-sub">Opus 4.6 + Extended Thinking — the senior advisor setting</div>
+            </div>
+          </div>
+          <div class="tool-detail-chevron">▾</div>
+        </div>
+        <div class="tool-detail-body">
+          <p class="body-intro">Most people use the default model and wonder why the output feels shallow. The model you choose is the difference between a junior assistant and a senior strategist. Right now, the correct choice is Opus 4.6 with Extended Thinking enabled.</p>
+
+          <h4 style="margin-bottom:16px;">How to Set It Up</h4>
+          <ol class="steps-list">
+            <li><span>Open any Claude chat on <strong>claude.ai</strong> or in Cowork.</span></li>
+            <li><span>Click the <strong>model selector dropdown</strong> at the bottom of the chat.</span></li>
+            <li><span>Select <strong>Opus 4.6</strong>.</span></li>
+            <li><span>Toggle on <strong>Extended Thinking</strong> — this is the critical step most people miss.</span></li>
+          </ol>
+
+          <div class="callout callout-tip">
+            <div class="callout-icon">🧠</div>
+            <div class="callout-text"><strong>What Extended Thinking does:</strong> It forces Claude to reason through a problem internally before responding — like a consultant who thinks before they speak. For strategic decisions, financial analysis, and complex writing, the quality difference is dramatic.</div>
+          </div>
+
+          <h4 style="margin-top:28px; margin-bottom:12px;">Connecting Your Tools</h4>
+          <p style="font-size:15px; color:var(--fco-text); margin-bottom:16px;">Claude can connect directly to Slack, Google Drive, Notion, Figma, and 50+ other tools via Connectors. Once connected, Claude searches your actual data — no copy-pasting, no screenshots.</p>
+          <ol class="steps-list">
+            <li><span>Go to <strong>Settings → Connectors</strong> in Claude.</span></li>
+            <li><span>Browse the directory and click <strong>Add</strong> on the tools you use.</span></li>
+            <li><span>Now ask Claude to search your Slack messages or pull from your Google Docs mid-conversation.</span></li>
+          </ol>
+
+          <div class="callout callout-warning">
+            <div class="callout-icon">⚠️</div>
+            <div class="callout-text"><strong>When to use a faster model:</strong> For quick drafts, simple formatting, or repetitive tasks, switch to a lighter model to preserve your usage limits. Save Opus 4.6 for strategic and complex work.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 3: Excel -->
+      <div class="tool-detail" id="tool-3">
+        <div class="tool-detail-header" onclick="toggleTool(3)">
+          <div class="tool-detail-header-left">
+            <div class="tool-detail-num">3</div>
+            <div>
+              <h3>Claude in Excel</h3>
+              <div class="tool-detail-sub">AI that lives inside your spreadsheet and understands every cell</div>
+            </div>
+          </div>
+          <div class="tool-detail-chevron">▾</div>
+        </div>
+        <div class="tool-detail-body">
+          <p class="body-intro">Every other AI flattens your spreadsheet into text and loses the formulas. Claude in Excel is different — it lives inside the workbook, reads every tab, and knows what each cell actually contains. This is the tool that changes how you build financial models.</p>
+
+          <h4 style="margin-bottom:16px;">Installation (3 Minutes)</h4>
+          <ol class="steps-list">
+            <li><span>Open <strong>Microsoft Excel</strong> (desktop or web, 2016 or later).</span></li>
+            <li><span>Go to <strong>Insert → Get Add-ins</strong> (Windows) or <strong>Tools → Add-ins</strong> (Mac).</span></li>
+            <li><span>Search <strong>"Claude by Anthropic"</strong> and click Add.</span></li>
+            <li><span>Sign in with your Claude account (Pro plan required).</span></li>
+            <li><span>Press <strong>Ctrl+Option+C</strong> (Mac) or find the Claude icon in your ribbon.</span></li>
+          </ol>
+
+          <h4 style="margin-top:28px; margin-bottom:12px;">High-Value Prompts for Operators</h4>
+          <div class="code-block">
+            <div class="code-label">📊 Excel Prompts</div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre>"Give me a plain-English summary of what each tab in this workbook does."
+
+"Find all #REF and #VALUE errors and explain what is causing each one."
+
+"Build a 3-year P&amp;L model for a service business with 40% gross margins. 
+Use formulas, not hardcoded numbers. Put assumptions in their own tab."
+
+"Create a client retention dashboard: churn rate, LTV, 
+cohort analysis, and a 6-month forecast."
+
+"Convert this flat data table into a pivot summary 
+grouped by month and product category."</pre>
+          </div>
+
+          <h4 style="margin-top:28px; margin-bottom:12px;">Build a Financial Model from Scratch</h4>
+          <div class="code-block">
+            <div class="code-label">💼 Full Model Prompt</div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre>Create a professional Excel spreadsheet (.xlsx) for: [PURPOSE]
+
+Context: [WHO IS IT FOR AND HOW WILL IT BE USED]
+It should cover: [LIST WHAT YOU WANT TO TRACK OR CALCULATE]
+
+Rules:
+- Use Excel formulas (SUM, SUMIF, IF, VLOOKUP) — never hardcoded calculations
+- Put all editable assumptions in a clearly labelled "Inputs" tab
+- Blue text for inputs, black for formula-driven cells
+- Freeze top row, auto-fit columns
+- Include a dashboard tab with key metrics and a trend chart</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 4: Plugins -->
+      <div class="tool-detail" id="tool-4">
+        <div class="tool-detail-header" onclick="toggleTool(4)">
+          <div class="tool-detail-header-left">
+            <div class="tool-detail-num">4</div>
+            <div>
+              <h3>Claude Plugins</h3>
+              <div class="tool-detail-sub">Instant specialist expertise with one click</div>
+            </div>
+          </div>
+          <div class="tool-detail-chevron">▾</div>
+        </div>
+        <div class="tool-detail-body">
+          <p class="body-intro">Anthropic released official plugins for Sales, Marketing, Legal, Finance, Data Analysis, Product Management, and Customer Support. Each one gives Claude specific workflows, domain knowledge, and slash commands for that function. You do not need to be technical. You just click install.</p>
+
+          <h4 style="margin-bottom:16px;">How to Install</h4>
+          <ol class="steps-list">
+            <li><span>Open <strong>Claude Cowork</strong>.</span></li>
+            <li><span>Go to <strong>claude.com/plugins</strong> and browse the directory.</span></li>
+            <li><span>Click <strong>Install</strong> on the plugin that matches your role.</span></li>
+            <li><span>In any chat, type <strong>/</strong> to see all available slash commands.</span></li>
+          </ol>
+
+          <h4 style="margin-top:28px; margin-bottom:16px;">Plugin Use Cases by Role</h4>
+          <div class="use-cases-grid">
+            <div class="use-case-card">
+              <div class="uc-icon">📣</div>
+              <h4>Marketing Plugin</h4>
+              <p>Draft content, build campaign briefs, and create audience-specific messaging — all with your voice profile loaded.</p>
+              <div class="uc-prompt">/draft-content Write a LinkedIn post about [topic]. Use my uploaded voice profile. Target [audience]. Goal: newsletter signups.</div>
+            </div>
+            <div class="use-case-card">
+              <div class="uc-icon">💼</div>
+              <h4>Sales Plugin</h4>
+              <p>Research accounts, prepare for calls, draft outreach sequences, and build competitive battlecards automatically.</p>
+              <div class="uc-prompt">/research-account Analyse [Company Name]. Find their recent news, key decision makers, and likely pain points for our solution.</div>
+            </div>
+            <div class="use-case-card">
+              <div class="uc-icon">📉</div>
+              <h4>Data Plugin</h4>
+              <p>Explore datasets, write SQL queries, build interactive dashboards, and validate your analysis — no data science background needed.</p>
+              <div class="uc-prompt">/build-dashboard Create an interactive dashboard from this CSV. Include filters by date and category. Show trends over time.</div>
+            </div>
+            <div class="use-case-card">
+              <div class="uc-icon">⚖️</div>
+              <h4>Legal Plugin</h4>
+              <p>Review contracts, flag unusual clauses, summarise legal documents, and draft standard agreements for review.</p>
+              <div class="uc-prompt">/review-contract Review this service agreement. Flag any unusual liability clauses, payment terms, or IP ownership issues.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 5: Artifacts -->
+      <div class="tool-detail" id="tool-5">
+        <div class="tool-detail-header" onclick="toggleTool(5)">
+          <div class="tool-detail-header-left">
+            <div class="tool-detail-num">5</div>
+            <div>
+              <h3>Claude Artifacts</h3>
+              <div class="tool-detail-sub">Working tools built inside the chat — not just text</div>
+            </div>
+          </div>
+          <div class="tool-detail-chevron">▾</div>
+        </div>
+        <div class="tool-detail-body">
+          <p class="body-intro">Artifacts are the most underused feature in Claude. Instead of giving you text that describes a calculator, Claude builds the actual calculator. Interactive HTML, visual charts, project trackers, and org charts — all live inside the chat window, ready to download and use.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-icon">⚡</div>
+            <div class="callout-text"><strong>No setup required.</strong> Artifacts work automatically in Claude Cowork and on claude.ai. Just ask for something interactive and Claude builds it.</div>
+          </div>
+
+          <h4 style="margin-top:28px; margin-bottom:12px;">High-Impact Artifact Prompts</h4>
+          <div class="code-block">
+            <div class="code-label">⚡ Artifact Prompts</div>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre>"Create an interactive ROI calculator for a SaaS product. 
+Inputs: monthly cost, hours saved per week, hourly rate. 
+Show payback period and annual ROI. Clean, professional design."
+
+"Build a visual comparison chart of our three service tiers 
+with a feature matrix and a recommended tier highlight."
+
+"Create a project tracker with columns for Task, Owner, 
+Status (dropdown), Priority, and Due Date. Include a progress bar."
+
+"Build an interactive org chart for a 15-person operations team. 
+Make it collapsible by department."
+
+"Create a weekly capacity planner with team member rows, 
+project columns, and colour-coded utilisation (green/amber/red)."</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tool 6: Projects -->
+      <div class="tool-detail" id="tool-6">
+        <div class="tool-detail-header" onclick="toggleTool(6)">
+          <div class="tool-detail-header-left">
+            <div class="tool-detail-num">6</div>
+            <div>
+              <h3>Claude Projects</h3>
+              <div class="tool-detail-sub">Persistent memory folders for ongoing work</div>
+            </div>
+          </div>
+          <div class="tool-detail-chevron">▾</div>
+        </div>
+        <div class="tool-detail-body">
+          <p class="body-intro">Projects give Claude a persistent memory for a specific body of work. Upload your brand docs, writing samples, and reference material once — and every conversation in that project has access to them. Best used for ongoing client work, newsletter production, or recurring reporting.</p>
+
+          <h4 style="margin-bottom:16px;">Setup in 5 Minutes</h4>
+          <ol class="steps-list">
+            <li><span>Go to <strong>claude.ai</strong> and click <strong>Projects</strong> in the left sidebar.</span></li>
+            <li><span>Click <strong>Create Project</strong> and give it a clear name (e.g., "Q2 Client Reporting").</span></li>
+            <li><span>Click <strong>Add Content</strong> and upload your key files: brand docs, past examples, data.</span></li>
+            <li><span>Start a new conversation — Claude now has full context from your uploaded files.</span></li>
+          </ol>
+
+          <div class="callout callout-warning">
+            <div class="callout-icon">⚠️</div>
+            <div class="callout-text"><strong>FCO Recommendation:</strong> For most operators, <strong>Cowork + markdown files</strong> is more reliable and flexible than Projects. Use Projects for client-specific work where you want a clean, isolated context. Use Cowork for your day-to-day operations workflow.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3: CONTEXT FILES ===== -->
+    <section class="section section-dark fade-in" id="context-files">
+      <div class="section-label">📄 The New Game</div>
+      <h2>Stop Prompting. Start Building Context Files.</h2>
+      <p class="section-intro">The biggest unlock in Claude is not a better prompt. It is a better context file. When you give Claude rich, structured information about your business upfront, you stop prompting entirely — and start getting outputs that sound like your best work.</p>
+
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-icon">👤</div>
+          <h4>About Me / My Business</h4>
+          <p>Your role, goals, communication style, and examples of your best work. This is the foundation file every operator needs.</p>
+          <span class="skill-file">about.md</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🎨</div>
+          <h4>Brand Guidelines</h4>
+          <p>Your tone of voice, words you use, words you avoid, target audience, and core values. Ensures every output is on-brand.</p>
+          <span class="skill-file">brand.md</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">📋</div>
+          <h4>Workflow / Process</h4>
+          <p>Step-by-step instructions for how a specific task should be completed. Claude follows your process, not a generic one.</p>
+          <span class="skill-file">workflow_[name].md</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">📊</div>
+          <h4>Data & Reference</h4>
+          <p>Key metrics, pricing tables, product specs, or any reference data Claude should have access to for accurate outputs.</p>
+          <span class="skill-file">reference_data.md</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">✍️</div>
+          <h4>Writing Samples</h4>
+          <p>Your best emails, proposals, or reports. Claude learns your style from examples, not descriptions.</p>
+          <span class="skill-file">writing_samples.md</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🎯</div>
+          <h4>Client / Audience Profiles</h4>
+          <p>Detailed profiles of your key clients or target audiences. Claude tailors every output to the right reader.</p>
+          <span class="skill-file">audience_profiles.md</span>
+        </div>
+      </div>
+
+      <h3 style="margin-top:48px; margin-bottom:8px; color:#fff;">See Inside a Real Context File</h3>
+      <p style="color:rgba(255,255,255,0.65); font-size:15px; margin-bottom:0;">Click the tabs to explore what each file type looks like in practice.</p>
+
+      <div class="file-builder">
+        <div class="file-builder-tabs">
+          <div class="file-tab active" onclick="switchTab('about')">about.md</div>
+          <div class="file-tab" onclick="switchTab('brand')">brand.md</div>
+          <div class="file-tab" onclick="switchTab('workflow')">workflow_proposal.md</div>
+          <div class="file-tab" onclick="switchTab('audience')">audience_profiles.md</div>
+        </div>
+        <div class="file-tab-content active" id="tab-about">
+          <pre><span class="heading"># About Me — [Your Name]</span>
+
+<span class="comment">## Role & Context</span>
+<span class="key">Role:</span> <span class="value">Founder & Managing Director, First Class Operations</span>
+<span class="key">Industry:</span> <span class="value">Business Operations Consulting</span>
+<span class="key">Team Size:</span> <span class="value">12 people across operations, delivery, and growth</span>
+
+<span class="comment">## What I Do</span>
+I help founder-led businesses build the operational infrastructure 
+they need to scale without chaos. My clients are typically 
+£1M–£10M revenue businesses that have outgrown their current 
+systems and need a professional operations layer.
+
+<span class="comment">## Communication Style</span>
+<span class="key">Tone:</span> <span class="value">Direct, confident, no fluff. I respect people's time.</span>
+<span class="key">Format:</span> <span class="value">Short paragraphs. Clear headers. Bullet points only when listing.</span>
+<span class="key">Avoid:</span> <span class="value">Jargon, passive voice, filler phrases like "it's worth noting"</span>
+<span class="key">Signature phrases:</span> <span class="value">"First class execution", "operational clarity", "built to scale"</span>
+
+<span class="comment">## My Goals This Quarter</span>
+1. Close 3 new retainer clients at £5K/month
+2. Launch the FCO AI Masterclass programme
+3. Reduce delivery overhead by 20% through better SOPs
+
+<span class="comment">## Example of Writing I'm Proud Of</span>
+[Paste your best email, proposal intro, or LinkedIn post here]</pre>
+        </div>
+        <div class="file-tab-content" id="tab-brand">
+          <pre><span class="heading"># First Class Operations — Brand Guidelines</span>
+
+<span class="comment">## Brand Positioning</span>
+<span class="key">Tagline:</span> <span class="value">Built to Scale. Designed to Last.</span>
+<span class="key">Promise:</span> <span class="value">We turn operational chaos into competitive advantage.</span>
+<span class="key">Audience:</span> <span class="value">Ambitious founders and operators scaling £1M–£10M businesses</span>
+
+<span class="comment">## Tone of Voice</span>
+<span class="key">Primary tone:</span> <span class="value">Authoritative but approachable. Expert, not arrogant.</span>
+<span class="key">Secondary tone:</span> <span class="value">Practical and action-oriented. We give people things they can use.</span>
+
+<span class="comment">## Language Rules</span>
+<span class="key">DO use:</span>
+- "Operational clarity" not "getting organised"
+- "Scale" not "grow" (growth is a by-product of scale)
+- "Systems" not "processes" (systems imply automation)
+- "Operators" not "managers" (operators execute, managers oversee)
+
+<span class="key">DO NOT use:</span>
+- "Synergy", "leverage" (as a verb), "circle back", "touch base"
+- Exclamation marks in formal content
+- Passive voice ("it was decided" → "we decided")
+
+<span class="comment">## Brand Colours (for reference in visual descriptions)</span>
+<span class="key">Primary:</span> <span class="value">#C86B45 (FCO Copper)</span>
+<span class="key">Dark:</span> <span class="value">#2F2E2D (FCO Charcoal)</span>
+<span class="key">Light:</span> <span class="value">#F6F5F2 (FCO Cream)</span></pre>
+        </div>
+        <div class="file-tab-content" id="tab-workflow">
+          <pre><span class="heading"># Workflow: Writing a Client Proposal</span>
+
+<span class="comment">## Purpose</span>
+This workflow defines how FCO writes proposals for new retainer clients.
+Follow this process exactly. Do not deviate.
+
+<span class="comment">## Step 1: Discovery Summary</span>
+Before writing, confirm you have:
+- The client's primary pain point (in their words)
+- Their current situation and what has failed before
+- Their definition of success in 90 days
+- Their budget range and decision timeline
+
+<span class="comment">## Step 2: Proposal Structure</span>
+<span class="key">Section 1:</span> <span class="value">The Problem (mirror their language back to them)</span>
+<span class="key">Section 2:</span> <span class="value">Why This Happens (show you understand the root cause)</span>
+<span class="key">Section 3:</span> <span class="value">Our Approach (3-phase methodology, not a list of deliverables)</span>
+<span class="key">Section 4:</span> <span class="value">What Success Looks Like (specific, measurable outcomes)</span>
+<span class="key">Section 5:</span> <span class="value">Investment & Timeline</span>
+<span class="key">Section 6:</span> <span class="value">Next Steps (one clear action, not multiple options)</span>
+
+<span class="comment">## Rules</span>
+- Maximum 4 pages. Founders do not read long proposals.
+- Lead with their problem, not our credentials.
+- Never use the word "deliverables" — use "outcomes" instead.
+- Every section should answer: "So what does this mean for me?"</pre>
+        </div>
+        <div class="file-tab-content" id="tab-audience">
+          <pre><span class="heading"># Audience Profiles</span>
+
+<span class="comment">## Profile 1: The Scaling Founder</span>
+<span class="key">Name:</span> <span class="value">Alex (composite)</span>
+<span class="key">Revenue:</span> <span class="value">£2M–£5M, growing 30%+ year-on-year</span>
+<span class="key">Team:</span> <span class="value">8–20 people, mostly hired reactively</span>
+<span class="key">Pain:</span> <span class="value">Everything runs through them. They are the bottleneck.</span>
+<span class="key">Fear:</span> <span class="value">Hiring the wrong person and losing control of quality</span>
+<span class="key">Goal:</span> <span class="value">Build a business that works without them in every decision</span>
+<span class="key">Reads:</span> <span class="value">Lenny's Newsletter, Diary of a CEO, First Class Operations</span>
+<span class="key">Responds to:</span> <span class="value">Specificity, case studies, ROI framing, peer validation</span>
+
+<span class="comment">## Profile 2: The Operations Director</span>
+<span class="key">Name:</span> <span class="value">Sarah (composite)</span>
+<span class="key">Revenue:</span> <span class="value">£5M–£15M business, hired to "sort out the ops"</span>
+<span class="key">Team:</span> <span class="value">Manages 3–5 direct reports, reports to CEO/Founder</span>
+<span class="key">Pain:</span> <span class="value">No documented processes, tribal knowledge, constant firefighting</span>
+<span class="key">Fear:</span> <span class="value">Being seen as the person who slows things down</span>
+<span class="key">Goal:</span> <span class="value">Build credibility fast by delivering visible, measurable improvements</span>
+<span class="key">Responds to:</span> <span class="value">Frameworks, templates, quick wins, executive-ready reporting</span></pre>
+        </div>
+      </div>
+
+      <div class="callout callout-tip" style="margin-top:32px; background:rgba(200,107,69,0.15); border-color:rgba(200,107,69,0.3);">
+        <div class="callout-icon">🚀</div>
+        <div class="callout-text" style="color:rgba(255,255,255,0.85);"><strong style="color:#fff;">The Golden Prompt:</strong> Once your files are in place, start every session with: <em>"Read the attached .md files completely before responding. DO NOT start executing yet. Ask me clarifying questions so we can align on the approach. Only begin work once we've agreed on the direction."</em></div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4: SKILLS FILES ===== -->
+    <section class="section fade-in" id="skills-files">
+      <div class="section-label">🛠 Advanced Setup</div>
+      <h2>Building Your Own Skills Files</h2>
+      <p class="section-intro">A Skills file is a specialised context file that defines exactly how Claude should approach a specific type of task. Think of it as writing a job description for Claude — one that captures your methodology, your standards, and your non-negotiables.</p>
+
+      <div class="callout callout-tip">
+        <div class="callout-icon">💡</div>
+        <div class="callout-text"><strong>Why Skills Files Matter:</strong> A generic prompt produces generic output. A Skills file encodes your expertise — your frameworks, your quality standards, your decision rules — so Claude produces outputs that reflect your best thinking, not an average of the internet.</div>
+      </div>
+
+      <h3 style="margin-top:36px; margin-bottom:20px;">The Anatomy of a Skills File</h3>
+      <div class="code-block">
+        <div class="code-label">📄 Skills File Template</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre># SKILL: [Name of the Skill]
+# Version: 1.0
+# Use When: [Describe the exact situation where Claude should apply this skill]
+
+## PURPOSE
+[One sentence: what does this skill help Claude do?]
+
+## CONTEXT
+[Background information Claude needs to do this well. 
+Include relevant industry knowledge, your methodology, 
+or any frameworks you use.]
+
+## PROCESS
+Step 1: [First action Claude should take]
+Step 2: [Second action]
+Step 3: [Continue as needed]
+
+## QUALITY STANDARDS
+- [Standard 1: e.g., "Every recommendation must include a specific metric"]
+- [Standard 2: e.g., "Always present 3 options, not 1"]
+- [Standard 3: e.g., "Flag any assumption you are making"]
+
+## OUTPUT FORMAT
+[Describe exactly how the output should be structured.
+Headers, length, tone, format.]
+
+## RULES
+- [Non-negotiable rule 1]
+- [Non-negotiable rule 2]
+- NEVER [thing Claude must not do]
+- ALWAYS [thing Claude must always do]
+
+## EXAMPLES
+[Paste 1–2 examples of ideal outputs for this skill]</pre>
+      </div>
+
+      <h3 style="margin-top:40px; margin-bottom:20px;">Real Skills File Examples</h3>
+
+      <div class="use-cases-grid">
+        <div class="use-case-card">
+          <div class="uc-icon">📊</div>
+          <h4>skill_financial_analysis.md</h4>
+          <p>Defines how Claude should analyse financial data: what metrics to prioritise, how to flag anomalies, and how to present findings to a non-finance audience.</p>
+          <div class="uc-prompt">Use When: Analysing P&amp;L statements, cash flow reports, or budget variances for client review.</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">✍️</div>
+          <h4>skill_content_writing.md</h4>
+          <p>Encodes your writing style, structure preferences, and content rules so every piece of content sounds like it came from you — not a generic AI.</p>
+          <div class="uc-prompt">Use When: Writing LinkedIn posts, newsletters, proposals, or any external-facing content.</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">🔍</div>
+          <h4>skill_client_research.md</h4>
+          <p>A structured research methodology for profiling prospects: what to look for, how to synthesise findings, and how to present intelligence for sales calls.</p>
+          <div class="uc-prompt">Use When: Preparing for a new business meeting or building a competitive battlecard.</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">⚙️</div>
+          <h4>skill_sop_creation.md</h4>
+          <p>Defines the exact structure and quality standards for Standard Operating Procedures: what sections to include, how to handle exceptions, and how to write for different audiences.</p>
+          <div class="uc-prompt">Use When: Documenting any repeatable business process for a team member to follow.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip" style="margin-top:32px;">
+        <div class="callout-icon">🎯</div>
+        <div class="callout-text"><strong>The Compound Effect:</strong> Each Skills file you create makes Claude permanently better at that task. Start with your highest-frequency, highest-stakes work — the tasks you do every week that need to be consistently excellent. Build one Skills file per week for a month and you will have a custom AI system that reflects your expertise.</div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 5: THE BRUTAL CRITIC ===== -->
+    <section class="section section-dark fade-in" id="critic">
+      <div class="section-label">🔥 Advanced Prompt</div>
+      <h2>Turn Claude Into Your Brutal Critic</h2>
+      <p class="section-intro">The most valuable use of Claude for operators is not writing content — it is stress-testing your thinking. This prompt turns Claude into the advisor who tells you what you need to hear, not what you want to hear.</p>
+
+      <div class="critic-steps">
+        <div class="critic-step">
+          <div class="step-label">Step 1</div>
+          <h4>What Are You Actually Saying?</h4>
+          <p>Claude reads between the lines. If you say "I'm thinking about hiring," it identifies whether you're making a strategic move or avoiding a harder conversation.</p>
+        </div>
+        <div class="critic-step">
+          <div class="step-label">Step 2</div>
+          <h4>Where Is Your Reasoning Broken?</h4>
+          <p>Claude dissects your logic like a mechanic taking apart an engine — showing you the specific part that doesn't work and why.</p>
+        </div>
+        <div class="critic-step">
+          <div class="step-label">Step 3</div>
+          <h4>What Are You Avoiding?</h4>
+          <p>Every time you dodge something hard, there's a cost. Claude calculates it and shows you what another week of avoidance actually costs your business.</p>
+        </div>
+        <div class="critic-step">
+          <div class="step-label">Step 4</div>
+          <h4>What Would an Expert Do Differently?</h4>
+          <p>Not motivational — concrete. Claude shows you the specific gap between your current approach and what expert-level thinking looks like on the same problem.</p>
+        </div>
+        <div class="critic-step">
+          <div class="step-label">Step 5</div>
+          <h4>What Should You Actually Do?</h4>
+          <p>A precise, prioritised action plan. What to start, what to stop, and what evidence would tell you it is not working.</p>
+        </div>
+        <div class="critic-step">
+          <div class="step-label">Step 6</div>
+          <h4>The Question You're Avoiding</h4>
+          <p>Claude ends with the one uncomfortable question you need to sit with — the one that makes your stomach drop a little.</p>
+        </div>
+      </div>
+
+      <div class="code-block" style="margin-top:36px;">
+        <div class="code-label">🔥 The Brutal Critic Prompt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>You are my brutally honest thinking partner. Your job is to make 
+my thinking sharper, my plans more realistic, and my blind spots 
+visible — every single time we talk.
+
+You are not my cheerleader. You are not my yes-man. You're the 
+advisor who grabs my arm before I walk into a bad decision and 
+says "Here's exactly why this is wrong."
+
+For everything I share, do this:
+
+1. What am I actually saying vs. what I think I'm saying?
+2. Where is my reasoning broken? Show me the specific flaw.
+3. What am I avoiding, and what is it costing me?
+4. What would someone who's actually where I want to be do differently?
+5. What should I actually do — in order, starting now?
+6. What is the one question I'm clearly avoiding?
+
+Rules:
+- Never open with praise or agreement. Ever.
+- Never soften a critique. Say the hard thing and let it land.
+- No motivational clichés. Concrete language only.
+- Keep it tight. A short, precise hit lands harder than a lecture.
+
+I want to walk away from every conversation seeing something 
+I couldn't see before — even if it stings.</pre>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 6: COMPARISON ===== -->
+    <section class="section fade-in" id="comparison">
+      <div class="section-label">⚖ Context</div>
+      <h2>Claude vs. The Alternatives</h2>
+      <p class="section-intro">No tool is best at everything. Here is an honest assessment of where Claude wins, where it falls short, and which tools to use for the gaps.</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Claude</th>
+            <th>ChatGPT</th>
+            <th>Gemini</th>
+            <th>Grok</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Long-form writing & strategy</strong></td>
+            <td><span class="check">✓ Best</span></td>
+            <td><span class="partial">~ Good</span></td>
+            <td><span class="partial">~ Good</span></td>
+            <td><span class="cross">✗ Weak</span></td>
+          </tr>
+          <tr>
+            <td><strong>Complex reasoning & analysis</strong></td>
+            <td><span class="check">✓ Best</span></td>
+            <td><span class="partial">~ Good</span></td>
+            <td><span class="partial">~ Good</span></td>
+            <td><span class="cross">✗ Weak</span></td>
+          </tr>
+          <tr>
+            <td><strong>Working with your files (Cowork)</strong></td>
+            <td><span class="check">✓ Best</span></td>
+            <td><span class="partial">~ Limited</span></td>
+            <td><span class="cross">✗ No</span></td>
+            <td><span class="cross">✗ No</span></td>
+          </tr>
+          <tr>
+            <td><strong>Excel / spreadsheet integration</strong></td>
+            <td><span class="check">✓ Best</span></td>
+            <td><span class="cross">✗ Flattens data</span></td>
+            <td><span class="cross">✗ No</span></td>
+            <td><span class="cross">✗ No</span></td>
+          </tr>
+          <tr>
+            <td><strong>Real-time web search</strong></td>
+            <td><span class="partial">~ Limited</span></td>
+            <td><span class="partial">~ Good</span></td>
+            <td><span class="partial">~ Good</span></td>
+            <td><span class="check">✓ Best (X data)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Image generation</strong></td>
+            <td><span class="cross">✗ None</span></td>
+            <td><span class="check">✓ DALL-E</span></td>
+            <td><span class="check">✓ Best</span></td>
+            <td><span class="cross">✗ No</span></td>
+          </tr>
+          <tr>
+            <td><strong>Video generation</strong></td>
+            <td><span class="cross">✗ None</span></td>
+            <td><span class="cross">✗ No</span></td>
+            <td><span class="check">✓ VEO</span></td>
+            <td><span class="cross">✗ No</span></td>
+          </tr>
+          <tr>
+            <td><strong>Code generation</strong></td>
+            <td><span class="check">✓ Excellent</span></td>
+            <td><span class="check">✓ Excellent</span></td>
+            <td><span class="partial">~ Good</span></td>
+            <td><span class="partial">~ Good</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-tip" style="margin-top:32px;">
+        <div class="callout-icon">🎯</div>
+        <div class="callout-text"><strong>The FCO Stack:</strong> Use Claude for everything that requires thinking, writing, and working with your data. Use Gemini for image generation. Use Grok for real-time news and social intelligence. These three tools cover 95% of what a modern operator needs.</div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 7: USE CASES ===== -->
+    <section class="section fade-in" id="use-cases">
+      <div class="section-label">💼 Real-World Impact</div>
+      <h2>What Operators Actually Use Claude For</h2>
+      <p class="section-intro">These are the highest-value use cases from operators who have embedded Claude into their daily work. Each one includes the exact prompt structure that works — not a vague suggestion, but a template you can use today.</p>
+
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:32px;">
+        <div class="use-case-card">
+          <div class="uc-icon">📝</div>
+          <h4>SOP Documentation</h4>
+          <p>Turn rough process notes into a complete, formatted SOP with decision trees and exception handling — in under 10 minutes.</p>
+          <div class="uc-prompt">"Read my notes on [process]. Build a full SOP with a decision tree for edge cases. Ask me questions before you start."</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">📈</div>
+          <h4>Quarterly Business Reviews</h4>
+          <p>Upload raw data and get a structured QBR narrative ready for the leadership team — with wins, risks, and recommendations.</p>
+          <div class="uc-prompt">"Read the Q[X] data files. Draft a QBR narrative for the leadership team. Highlight the 3 biggest wins and 2 critical risks."</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">🤝</div>
+          <h4>Proposal Writing</h4>
+          <p>Feed Claude your brand voice, past proposals, and the client brief. Get a proposal that sounds like your best work — not a template.</p>
+          <div class="uc-prompt">"Using my brand voice file and the client brief, write a proposal for this project. Match my tone exactly. Ask clarifying questions first."</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">🔍</div>
+          <h4>Competitive Intelligence</h4>
+          <p>Feed Claude competitor data, market reports, and your positioning doc to get a strategic gap analysis with clear differentiators.</p>
+          <div class="uc-prompt">"Analyse these competitor profiles against our positioning. Identify our 3 strongest differentiators and 2 areas of vulnerability."</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">📧</div>
+          <h4>High-Stakes Email Drafting</h4>
+          <p>Give Claude the context, the relationship history, and the outcome you need. Get a draft that is precise, on-tone, and ready to send.</p>
+          <div class="uc-prompt">"I need to write to [person] about [situation]. Context: [background]. Goal: [outcome]. Draft this email in my voice. Ask questions first."</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">🧠</div>
+          <h4>Strategic Decision Review</h4>
+          <p>Before making a major decision, run it through the Brutal Critic prompt. Claude will find the flaws in your thinking before you commit.</p>
+          <div class="uc-prompt">"I'm considering [decision]. Read my reasoning below. Tell me where my logic is broken, what I'm avoiding, and what I should actually do."</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">📊</div>
+          <h4>Financial Model Building</h4>
+          <p>Build a complete, formula-driven financial model in Excel from a plain-English brief — with assumptions tab, dashboard, and trend charts.</p>
+          <div class="uc-prompt">"Build a 3-year P&amp;L model for a service business with 40% gross margins. Use formulas, not hardcoded numbers. Put assumptions in their own tab."</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">🎯</div>
+          <h4>Client Onboarding Packs</h4>
+          <p>Upload your methodology, the client's brief, and their discovery notes. Claude builds a complete onboarding pack tailored to their situation.</p>
+          <div class="uc-prompt">"Using the discovery notes and our methodology doc, build a complete onboarding pack for [Client]. Include a 90-day roadmap and success metrics."</div>
+        </div>
+        <div class="use-case-card">
+          <div class="uc-icon">📣</div>
+          <h4>Content & Newsletter Writing</h4>
+          <p>Feed Claude your writing samples and a topic. Get a first draft that matches your voice, structure, and standards — ready to edit, not rewrite.</p>
+          <div class="uc-prompt">"Using my writing samples file, write a LinkedIn post about [topic]. Target [audience]. Goal: [outcome]. Match my tone and structure exactly."</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip" style="margin-top:36px;">
+        <div class="callout-icon">🔑</div>
+        <div class="callout-text"><strong>The pattern behind every great use case:</strong> Context file loaded + alignment prompt used + specific outcome defined. That three-part structure is what separates operators who get 10× output from those who get generic answers. Every prompt above follows it.</div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 8: BUILD MD FILES ===== -->
+    <section class="section section-muted fade-in" id="build-md">
+      <div class="section-label">📄 Step-by-Step Guide</div>
+      <h2>How to Build Your MD &amp; Skills Files From Scratch</h2>
+      <p class="section-intro">A Markdown (.md) file is a plain text file with simple formatting. You do not need any special software. You need a text editor, 20 minutes, and the templates below. Here is the exact process for building every file type.</p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:40px;">
+
+        <!-- Left: How to create the file -->
+        <div>
+          <h3 style="margin-bottom:20px;">Step 1: Create the File</h3>
+          <ol class="steps-list">
+            <li><span>Open <strong>Notepad</strong> (Windows), <strong>TextEdit</strong> (Mac, in plain text mode), or <strong>VS Code</strong> (recommended — free).</span></li>
+            <li><span>Write your content using the templates below. Use <code style="background:rgba(200,107,69,0.12); padding:2px 6px; border-radius:4px; font-size:13px;">#</code> for headings, <code style="background:rgba(200,107,69,0.12); padding:2px 6px; border-radius:4px; font-size:13px;">##</code> for sub-headings, and plain text for content.</span></li>
+            <li><span>Save the file with a <strong>.md extension</strong> — e.g., <code style="background:rgba(200,107,69,0.12); padding:2px 6px; border-radius:4px; font-size:13px;">about.md</code>, <code style="background:rgba(200,107,69,0.12); padding:2px 6px; border-radius:4px; font-size:13px;">brand.md</code>.</span></li>
+            <li><span>Create a dedicated folder on your computer called <strong>Claude Context</strong> and store all your .md files there.</span></li>
+            <li><span>In Claude Cowork, point the folder selector at your <strong>Claude Context</strong> folder. Claude will read every file in it automatically.</span></li>
+          </ol>
+
+          <div class="callout callout-tip" style="margin-top:24px;">
+            <div class="callout-icon">💡</div>
+            <div class="callout-text"><strong>Or use the AI File Generator:</strong> Skip the blank page entirely. Our <a href="agent.html" style="color:var(--fco-cta); font-weight:600;">interactive agent</a> asks you the right questions and builds your files automatically — ready to download and use.</div>
+          </div>
+        </div>
+
+        <!-- Right: File naming conventions -->
+        <div>
+          <h3 style="margin-bottom:20px;">Step 2: Name Your Files Correctly</h3>
+          <p style="font-size:15px; color:var(--fco-text); margin-bottom:20px;">Consistent naming makes it easy to reference files in prompts and keeps your folder organised as it grows.</p>
+          <table style="width:100%; border-collapse:collapse; font-size:14px;">
+            <thead>
+              <tr style="background:var(--fco-heading); color:#fff;">
+                <th style="padding:12px 16px; text-align:left; border-radius:8px 0 0 0;">File Name</th>
+                <th style="padding:12px 16px; text-align:left; border-radius:0 8px 0 0;">What It Contains</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid rgba(196,183,166,0.3);">
+                <td style="padding:12px 16px;"><code style="background:rgba(200,107,69,0.1); padding:2px 8px; border-radius:4px;">about.md</code></td>
+                <td style="padding:12px 16px; color:#555;">Your role, goals, communication style, writing examples</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(196,183,166,0.3); background:rgba(246,245,242,0.5);">
+                <td style="padding:12px 16px;"><code style="background:rgba(200,107,69,0.1); padding:2px 8px; border-radius:4px;">brand.md</code></td>
+                <td style="padding:12px 16px; color:#555;">Tone of voice, language rules, values, audience</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(196,183,166,0.3);">
+                <td style="padding:12px 16px;"><code style="background:rgba(200,107,69,0.1); padding:2px 8px; border-radius:4px;">workflow_[name].md</code></td>
+                <td style="padding:12px 16px; color:#555;">Step-by-step process for a specific task type</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(196,183,166,0.3); background:rgba(246,245,242,0.5);">
+                <td style="padding:12px 16px;"><code style="background:rgba(200,107,69,0.1); padding:2px 8px; border-radius:4px;">skill_[name].md</code></td>
+                <td style="padding:12px 16px; color:#555;">Domain expertise + quality standards for a task type</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(196,183,166,0.3);">
+                <td style="padding:12px 16px;"><code style="background:rgba(200,107,69,0.1); padding:2px 8px; border-radius:4px;">reference_data.md</code></td>
+                <td style="padding:12px 16px; color:#555;">Pricing, metrics, product specs, key numbers</td>
+              </tr>
+              <tr style="background:rgba(246,245,242,0.5);">
+                <td style="padding:12px 16px;"><code style="background:rgba(200,107,69,0.1); padding:2px 8px; border-radius:4px;">audience_profiles.md</code></td>
+                <td style="padding:12px 16px; color:#555;">Client/customer profiles, pain points, goals</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <h3 style="margin-top:48px; margin-bottom:20px;">Step 3: What to Write in Each File</h3>
+      <p style="font-size:15px; color:var(--fco-text); margin-bottom:28px;">The quality of your output is directly proportional to the quality of your context files. Here is what to include in each one — and what most people miss.</p>
+
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+        <div style="background:#fff; border-radius:12px; padding:24px; border:1px solid rgba(196,183,166,0.3); box-shadow:0 4px 16px rgba(47,46,45,0.08);">
+          <div style="font-size:24px; margin-bottom:12px;">👤</div>
+          <h4 style="margin-bottom:12px;">about.md — The Foundation</h4>
+          <p style="font-size:14px; color:#666; margin-bottom:16px;">Most people write a job description. Write a <em>brief</em> instead — as if you're onboarding a new team member who needs to think like you.</p>
+          <ul style="font-size:13px; color:#555; line-height:2; padding-left:16px;">
+            <li>Your role and what you're responsible for</li>
+            <li>What success looks like in your world</li>
+            <li>How you communicate (tone, format, pace)</li>
+            <li>Words/phrases you use and avoid</li>
+            <li>2–3 examples of writing you're proud of</li>
+            <li>Your current top 3 priorities</li>
+          </ul>
+        </div>
+        <div style="background:#fff; border-radius:12px; padding:24px; border:1px solid rgba(196,183,166,0.3); box-shadow:0 4px 16px rgba(47,46,45,0.08);">
+          <div style="font-size:24px; margin-bottom:12px;">🎨</div>
+          <h4 style="margin-bottom:12px;">brand.md — The Voice</h4>
+          <p style="font-size:14px; color:#666; margin-bottom:16px;">This is the file that makes Claude sound like <em>you</em>, not like a generic AI. Be specific — vague instructions produce vague outputs.</p>
+          <ul style="font-size:13px; color:#555; line-height:2; padding-left:16px;">
+            <li>Brand positioning in one sentence</li>
+            <li>Primary and secondary tone descriptors</li>
+            <li>Specific words you DO use (with examples)</li>
+            <li>Specific words you DO NOT use</li>
+            <li>Formatting rules (headers, bullets, length)</li>
+            <li>Target audience description</li>
+          </ul>
+        </div>
+        <div style="background:#fff; border-radius:12px; padding:24px; border:1px solid rgba(196,183,166,0.3); box-shadow:0 4px 16px rgba(47,46,45,0.08);">
+          <div style="font-size:24px; margin-bottom:12px;">⚙️</div>
+          <h4 style="margin-bottom:12px;">skill_[name].md — The Expertise</h4>
+          <p style="font-size:14px; color:#666; margin-bottom:16px;">This is where you encode your methodology. Think of it as writing the instructions for a highly capable contractor who knows nothing about your standards.</p>
+          <ul style="font-size:13px; color:#555; line-height:2; padding-left:16px;">
+            <li>When to use this skill (trigger conditions)</li>
+            <li>Your step-by-step process</li>
+            <li>Quality standards and non-negotiables</li>
+            <li>Output format and structure</li>
+            <li>Rules: what to always do / never do</li>
+            <li>1–2 examples of ideal output</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top:36px; background:var(--fco-heading); border-radius:16px; padding:32px 36px; display:flex; align-items:center; gap:28px; flex-wrap:wrap;">
+        <div style="flex:1; min-width:260px;">
+          <div style="font-size:13px; font-weight:700; color:#e8a07a; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">⚡ Skip the Blank Page</div>
+          <h3 style="color:#fff; font-size:22px; margin-bottom:8px;">Use the AI File Generator</h3>
+          <p style="color:rgba(255,255,255,0.7); font-size:15px;">Answer a few questions about your business and role. The agent builds all your context and skills files automatically — ready to download and load into Claude.</p>
+        </div>
+        <a href="agent.html" class="btn btn-primary" style="flex-shrink:0; font-size:15px;">Build My Files Now →</a>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 9: 30-MINUTE ACTION PLAN ===== -->
+    <section class="section section-warm fade-in" id="action-plan">
+      <div class="section-label">🚀 Your Action Plan</div>
+      <h2>Master Claude in 30 Minutes</h2>
+      <p class="section-intro">Block 30 minutes this week. Follow this plan in order. By the end, you will have a working Claude setup that is personalised to your business and ready to use every day.</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot">1</div>
+          <div class="timeline-content">
+            <div class="timeline-time">Minutes 0–5</div>
+            <h4>Install Claude & Get Pro</h4>
+            <p>Download the desktop app from claude.com/download. Create an account or sign in. Upgrade to Pro ($20/month or $17/month annually). Open the app and click the Cowork tab.</p>
+            <a href="https://claude.com/download" target="_blank" class="timeline-action">→ claude.com/download</a>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">2</div>
+          <div class="timeline-content">
+            <div class="timeline-time">Minutes 5–12</div>
+            <h4>Create Your First Context File</h4>
+            <p>Open any text editor. Create a file called <code style="background:rgba(200,107,69,0.15); padding:2px 6px; border-radius:4px; font-size:13px;">about.md</code>. Write three things: (1) what you do for work, (2) how you like to communicate, (3) paste in one example of writing you're proud of. Save it as a .md file.</p>
+            <a href="#context-files" class="timeline-action">→ Use the template in the Context Files section above</a>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">3</div>
+          <div class="timeline-content">
+            <div class="timeline-time">Minutes 12–18</div>
+            <h4>Start Your First Cowork Conversation</h4>
+            <p>In Claude Cowork, select the folder where your about.md file lives. Use the Alignment Prompt: "Read the about-me file. Based on it, ask me questions before drafting [your most important current task]." See what happens. Iterate.</p>
+            <a href="#tool-1" onclick="document.getElementById('tool-1').classList.add('open')" class="timeline-action">→ Use the Alignment Prompt from Tool 1 above</a>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">4</div>
+          <div class="timeline-content">
+            <div class="timeline-time">Minutes 18–23</div>
+            <h4>Install a Plugin & Try a Slash Command</h4>
+            <p>Go to claude.com/plugins. Install the plugin most relevant to your role (Marketing, Sales, or Data are good starting points). Start a new Cowork conversation with the plugin active. Type / to see available commands and try one.</p>
+            <a href="https://claude.com/plugins" target="_blank" class="timeline-action">→ claude.com/plugins</a>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">5</div>
+          <div class="timeline-content">
+            <div class="timeline-time">Minutes 23–27</div>
+            <h4>Build Your First Artifact</h4>
+            <p>Inside any Claude chat, ask it to build something interactive: "Create a weekly capacity planner as an interactive HTML page with team member rows and colour-coded utilisation." Interact with it. Ask for changes. Download it.</p>
+            <a href="#tool-5" onclick="document.getElementById('tool-5').classList.add('open')" class="timeline-action">→ Use the Artifact prompts from Tool 5 above</a>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">6</div>
+          <div class="timeline-content">
+            <div class="timeline-time">Minutes 27–30</div>
+            <h4>Install Claude in Excel</h4>
+            <p>Open Excel. Go to Insert → Get Add-ins. Search "Claude by Anthropic." Install. Open any spreadsheet and ask: "Give me a plain-English summary of what each tab does." Or start a new financial model from scratch using the prompt in Tool 3.</p>
+            <a href="#tool-3" onclick="document.getElementById('tool-3').classList.add('open')" class="timeline-action">→ Use the Excel prompts from Tool 3 above</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="fco_logo.png" alt="First Class Operations" />
+        <p>Helping ambitious founders and operators build the systems they need to scale without chaos.</p>
+      </div>
+      <div class="footer-links">
+        <h5>This Guide</h5>
+        <ul>
+          <li><a href="#overview">The Six Tools</a></li>
+          <li><a href="#tools">Deep Dives</a></li>
+          <li><a href="#context-files">Context Files</a></li>
+          <li><a href="#skills-files">Skills Files</a></li>
+          <li><a href="#action-plan">30-Min Action Plan</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h5>First Class Operations</h5>
+        <ul>
+          <li><a href="https://www.firstclassoperations.co.uk/about" target="_blank">About FCO</a></li>
+          <li><a href="https://www.firstclassoperations.co.uk/ai-masterclass" target="_blank">AI Masterclass</a></li>
+          <li><a href="https://www.firstclassoperations.co.uk/consulting" target="_blank">Operations Consulting</a></li>
+          <li><a href="https://www.firstclassoperations.co.uk/contact" target="_blank">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 First Class Operations. All rights reserved.</span>
+      <span>Built for operators who demand <a href="https://www.firstclassoperations.co.uk" target="_blank">first class execution</a>.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to Top -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<script>
+  // ===== PROGRESS BAR =====
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+
+    // Scroll to top button
+    const btn = document.getElementById('scroll-top');
+    if (scrollTop > 400) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // ===== ACCORDION =====
+  function toggleTool(num) {
+    const el = document.getElementById('tool-' + num);
+    el.classList.toggle('open');
+  }
+
+  // ===== SCROLL TO TOOL =====
+  function scrollToTool(num) {
+    const el = document.getElementById('tool-' + num);
+    if (el) {
+      // Open it
+      el.classList.add('open');
+      // Scroll to tools section
+      document.getElementById('tools').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Then scroll to specific tool after a moment
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 400);
+    }
+  }
+
+  // ===== FILE TABS =====
+  function switchTab(name) {
+    document.querySelectorAll('.file-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.file-tab-content').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+
+  // ===== COPY CODE =====
+  function copyCode(btn) {
+    const pre = btn.parentElement.querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // ===== MOBILE NAV =====
+  function toggleNav() {
+    document.getElementById('nav-links').classList.toggle('open');
+  }
+
+  // ===== FADE IN ON SCROLL =====
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // ===== SMOOTH ANCHOR SCROLL WITH OFFSET =====
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+        // Close mobile nav
+        document.getElementById('nav-links').classList.remove('open');
+      }
+    });
+  });
+</script>
+</body>
+</html>
