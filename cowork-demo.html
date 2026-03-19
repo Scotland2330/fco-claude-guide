@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Co-Work Live Execution | First Class Operations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F6F5F2;
+      --dark: #2F2E2D;
+      --darker: #1a1918;
+      --darkest: #111010;
+      --cta: #C86B45;
+      --cta-dark: #b85a3a;
+      --ui: #C4B7A6;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --blue: #60a5fa;
+      --white: #fff;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Barlow', sans-serif; background: var(--darkest); color: var(--dark); display: flex; flex-direction: column; }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--darker);
+      border-bottom: 2px solid var(--cta);
+      padding: 0 24px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+    .h-left { display: flex; align-items: center; gap: 14px; }
+    .h-left img { height: 30px; filter: brightness(0) invert(1); }
+    .h-badge { background: var(--cta); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+    .h-right { display: flex; align-items: center; gap: 12px; }
+    .h-live { display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 600; }
+    .h-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    .h-btn { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; }
+    .h-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .h-btn.primary { background: var(--cta); color: #fff; border-color: var(--cta); }
+    .h-btn.primary:hover { background: var(--cta-dark); }
+
+    /* ── APP SHELL ── */
+    .app { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── SCENARIO SIDEBAR ── */
+    .sidebar {
+      width: 260px;
+      background: #1c1b1a;
+      border-right: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+    .sb-head { padding: 16px 16px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .sb-head h3 { font-size: 11px; font-weight: 800; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1.5px; }
+    .sb-scenario {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: all 0.2s;
+      font-family: 'Barlow', sans-serif;
+      background: none;
+      border-left: 3px solid transparent;
+      width: 100%;
+      text-align: left;
+    }
+    .sb-scenario:hover { background: rgba(255,255,255,0.04); }
+    .sb-scenario.active { background: rgba(200,107,69,0.12); border-left-color: var(--cta); }
+    .sb-icon { font-size: 18px; flex-shrink: 0; }
+    .sb-info {}
+    .sb-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 2px; }
+    .sb-scenario.active .sb-title { color: #fff; }
+    .sb-sub { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.4; }
+
+    /* ── MAIN WORKSPACE ── */
+    .workspace { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+
+    /* Workspace toolbar */
+    .ws-toolbar {
+      background: var(--white);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .ws-icon { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--cta), var(--cta-dark)); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .ws-info { flex: 1; }
+    .ws-title { font-size: 15px; font-weight: 800; color: var(--dark); }
+    .ws-sub { font-size: 12px; color: #999; }
+    .ws-actions { display: flex; gap: 8px; }
+    .ws-btn { background: none; border: 1px solid rgba(0,0,0,0.12); border-radius: 7px; padding: 6px 14px; font-size: 12px; font-family: 'Barlow', sans-serif; color: #666; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+    .ws-btn:hover { background: var(--bg); }
+    .ws-btn.primary { background: var(--cta); color: #fff; border-color: var(--cta); }
+    .ws-btn.primary:hover { background: var(--cta-dark); }
+
+    /* Stage area */
+    .stage { flex: 1; overflow-y: auto; padding: 28px 32px; display: flex; flex-direction: column; gap: 20px; }
+    .stage::-webkit-scrollbar { width: 4px; }
+    .stage::-webkit-scrollbar-thumb { background: var(--ui); border-radius: 2px; }
+
+    /* Welcome screen */
+    .welcome { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; padding: 40px; }
+    .welcome-icon { width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, var(--cta), var(--cta-dark)); display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 24px; box-shadow: 0 20px 40px rgba(200,107,69,0.25); }
+    .welcome h2 { font-size: 26px; font-weight: 900; color: var(--dark); margin-bottom: 10px; }
+    .welcome p { font-size: 15px; color: #777; max-width: 480px; line-height: 1.6; margin-bottom: 8px; }
+    .welcome-hint { font-size: 13px; color: var(--cta); font-weight: 700; margin-top: 20px; }
+
+    /* ── PHASE CARDS ── */
+    .phase-card {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.07);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      overflow: hidden;
+      animation: slideIn 0.4s ease;
+    }
+    @keyframes slideIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .phase-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0;
+    }
+    .phase-num.pending { background: rgba(196,183,166,0.2); color: #aaa; }
+    .phase-num.running { background: rgba(251,191,36,0.2); color: var(--yellow); animation: spin-pulse 1.5s infinite; }
+    .phase-num.done { background: rgba(74,222,128,0.15); color: var(--green); }
+    @keyframes spin-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    .phase-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+    .phase-label.pending { color: #bbb; }
+    .phase-label.running { color: var(--yellow); }
+    .phase-label.done { color: var(--green); }
+    .phase-title { font-size: 15px; font-weight: 800; color: var(--dark); flex: 1; }
+    .phase-time { font-size: 11px; color: #bbb; font-family: 'JetBrains Mono', monospace; }
+
+    .phase-body { padding: 20px; }
+
+    /* File reading */
+    .file-list { display: flex; flex-direction: column; gap: 6px; }
+    .file-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: var(--bg); font-size: 13px; }
+    .file-item.reading { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); }
+    .file-item.read { background: rgba(74,222,128,0.06); border: 1px solid rgba(74,222,128,0.15); }
+    .file-item.pending { background: rgba(196,183,166,0.1); border: 1px solid rgba(196,183,166,0.2); }
+    .fi-icon { font-size: 14px; flex-shrink: 0; }
+    .fi-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--dark); font-weight: 500; flex: 1; }
+    .fi-status { font-size: 11px; font-weight: 700; }
+    .fi-status.reading { color: var(--yellow); }
+    .fi-status.read { color: var(--green); }
+    .fi-status.pending { color: #bbb; }
+    .fi-size { font-size: 11px; color: #aaa; font-family: 'JetBrains Mono', monospace; }
+
+    /* AskUserQuestion form */
+    .ask-form { background: rgba(200,107,69,0.04); border: 1px solid rgba(200,107,69,0.15); border-radius: 12px; padding: 20px; }
+    .ask-form-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .ask-form-header .af-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(200,107,69,0.15); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .ask-form-header h4 { font-size: 14px; font-weight: 800; color: var(--dark); }
+    .ask-form-header p { font-size: 12px; color: #888; }
+    .ask-fields { display: flex; flex-direction: column; gap: 14px; }
+    .ask-field label { display: block; font-size: 12px; font-weight: 700; color: var(--dark); margin-bottom: 5px; }
+    .ask-field label span { color: var(--cta); }
+    .ask-field input, .ask-field textarea, .ask-field select {
+      width: 100%; padding: 10px 12px; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 8px;
+      font-family: 'Barlow', sans-serif; font-size: 14px; color: var(--dark);
+      background: var(--white); outline: none; transition: border-color 0.2s;
+    }
+    .ask-field input:focus, .ask-field textarea:focus, .ask-field select:focus { border-color: var(--cta); }
+    .ask-field textarea { resize: vertical; min-height: 72px; }
+    .ask-field .hint { font-size: 11px; color: #aaa; margin-top: 4px; }
+    .ask-submit { margin-top: 18px; display: flex; gap: 10px; align-items: center; }
+    .ask-submit-btn { background: var(--cta); color: #fff; border: none; border-radius: 8px; padding: 10px 24px; font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .ask-submit-btn:hover { background: var(--cta-dark); }
+    .ask-submit-btn:disabled { background: rgba(200,107,69,0.3); cursor: not-allowed; }
+    .ask-submit-hint { font-size: 12px; color: #aaa; }
+
+    /* Task plan */
+    .task-plan { display: flex; flex-direction: column; gap: 0; }
+    .tp-step { display: flex; align-items: stretch; gap: 0; }
+    .tp-left { display: flex; flex-direction: column; align-items: center; width: 40px; flex-shrink: 0; }
+    .tp-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0;
+      border: 2px solid;
+    }
+    .tp-circle.pending { background: rgba(196,183,166,0.1); border-color: rgba(196,183,166,0.3); color: #bbb; }
+    .tp-circle.running { background: rgba(251,191,36,0.15); border-color: var(--yellow); color: var(--yellow); }
+    .tp-circle.done { background: rgba(74,222,128,0.12); border-color: var(--green); color: var(--green); }
+    .tp-line { width: 2px; flex: 1; min-height: 12px; background: rgba(196,183,166,0.2); }
+    .tp-line.done { background: rgba(74,222,128,0.3); }
+    .tp-right { flex: 1; padding: 4px 0 20px 14px; }
+    .tp-step-title { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+    .tp-step-title.pending { color: #bbb; }
+    .tp-step-title.running { color: var(--dark); }
+    .tp-step-title.done { color: var(--dark); }
+    .tp-step-desc { font-size: 12px; color: #888; line-height: 1.5; }
+    .tp-step-output { margin-top: 8px; font-size: 12px; color: #666; background: var(--bg); border-radius: 6px; padding: 8px 10px; border-left: 2px solid var(--green); font-family: 'JetBrains Mono', monospace; line-height: 1.6; }
+    .tp-typing { display: flex; gap: 4px; align-items: center; margin-top: 6px; }
+    .tp-typing span { width: 5px; height: 5px; background: var(--yellow); border-radius: 50%; animation: bounce 1.2s infinite; }
+    .tp-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .tp-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+    /* Document output */
+    .doc-output {
+      background: var(--white);
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.07);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      overflow: hidden;
+      animation: slideIn 0.4s ease;
+    }
+    .doc-toolbar {
+      background: var(--darker);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .doc-dots { display: flex; gap: 6px; }
+    .doc-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .doc-dot:nth-child(1) { background: #ff5f57; }
+    .doc-dot:nth-child(2) { background: #febc2e; }
+    .doc-dot:nth-child(3) { background: #28c840; }
+    .doc-filename { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.6); flex: 1; text-align: center; }
+    .doc-actions { display: flex; gap: 8px; }
+    .doc-btn { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: none; border-radius: 5px; padding: 4px 10px; font-size: 11px; font-family: 'Barlow', sans-serif; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .doc-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .doc-btn.save { background: var(--cta); color: #fff; }
+    .doc-btn.save:hover { background: var(--cta-dark); }
+    .doc-content { padding: 36px 40px; max-height: 480px; overflow-y: auto; }
+    .doc-content::-webkit-scrollbar { width: 4px; }
+    .doc-content::-webkit-scrollbar-thumb { background: var(--ui); border-radius: 2px; }
+    .doc-content h1 { font-size: 24px; font-weight: 900; color: var(--dark); margin-bottom: 6px; border-bottom: 2px solid var(--cta); padding-bottom: 12px; margin-bottom: 20px; }
+    .doc-content h2 { font-size: 17px; font-weight: 800; color: var(--dark); margin: 24px 0 8px; }
+    .doc-content h3 { font-size: 15px; font-weight: 700; color: var(--cta); margin: 18px 0 6px; }
+    .doc-content p { font-size: 14px; color: #444; line-height: 1.8; margin-bottom: 10px; }
+    .doc-content ul, .doc-content ol { padding-left: 20px; margin-bottom: 12px; }
+    .doc-content li { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 4px; }
+    .doc-content table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+    .doc-content th { background: var(--bg); padding: 8px 12px; text-align: left; font-weight: 700; color: var(--dark); border: 1px solid rgba(0,0,0,0.08); }
+    .doc-content td { padding: 8px 12px; border: 1px solid rgba(0,0,0,0.06); color: #555; }
+    .doc-content tr:nth-child(even) td { background: rgba(246,245,242,0.5); }
+    .doc-content blockquote { border-left: 3px solid var(--cta); padding-left: 16px; color: #666; font-style: italic; margin: 12px 0; }
+    .doc-content .doc-meta { display: flex; gap: 20px; margin-bottom: 24px; padding: 12px 16px; background: var(--bg); border-radius: 8px; }
+    .doc-content .doc-meta-item { font-size: 12px; color: #888; }
+    .doc-content .doc-meta-item strong { color: var(--dark); display: block; font-size: 13px; margin-bottom: 2px; }
+    .doc-content .highlight-box { background: rgba(200,107,69,0.06); border: 1px solid rgba(200,107,69,0.2); border-radius: 8px; padding: 14px 16px; margin: 14px 0; }
+    .doc-content .highlight-box p { margin: 0; color: var(--dark); font-weight: 500; }
+
+    /* Completion banner */
+    .completion-banner {
+      background: linear-gradient(135deg, rgba(74,222,128,0.1), rgba(74,222,128,0.05));
+      border: 1px solid rgba(74,222,128,0.25);
+      border-radius: 12px;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: slideIn 0.4s ease;
+    }
+    .cb-icon { font-size: 28px; flex-shrink: 0; }
+    .cb-body { flex: 1; }
+    .cb-title { font-size: 15px; font-weight: 800; color: var(--dark); margin-bottom: 3px; }
+    .cb-sub { font-size: 13px; color: #666; }
+    .cb-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .cb-btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; font-family: 'Barlow', sans-serif; cursor: pointer; border: none; transition: all 0.2s; }
+    .cb-btn.primary { background: var(--cta); color: #fff; }
+    .cb-btn.primary:hover { background: var(--cta-dark); }
+    .cb-btn.secondary { background: rgba(0,0,0,0.06); color: var(--dark); }
+    .cb-btn.secondary:hover { background: rgba(0,0,0,0.1); }
+
+    /* Keynote footer */
+    .kf {
+      background: var(--darker);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .kf-url { font-size: 12px; color: rgba(255,255,255,0.4); font-family: 'JetBrains Mono', monospace; }
+    .kf-url span { color: var(--cta); }
+    .kf-cta { font-size: 12px; color: rgba(255,255,255,0.5); }
+    .kf-cta a { color: var(--cta); text-decoration: none; font-weight: 700; }
+
+    @media (max-width: 900px) { .sidebar { display: none; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="h-left">
+    <img src="fco_logo.png" alt="First Class Operations" />
+    <span class="h-badge">Co-Work Demo</span>
+  </div>
+  <div class="h-right">
+    <div class="h-live"><span class="h-dot"></span> Agent Running</div>
+    <a href="index.html" class="h-btn">← Guide</a>
+    <a href="demo.html" class="h-btn">Chat Demo</a>
+    <a href="https://www.firstclassoperations.co.uk/contact" target="_blank" class="h-btn primary">Hire Us →</a>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-head"><h3>Select a Task</h3></div>
+
+    <button class="sb-scenario" onclick="selectScenario(this,'proposal')">
+      <span class="sb-icon">📝</span>
+      <div class="sb-info">
+        <div class="sb-title">Client Proposal</div>
+        <div class="sb-sub">Reads brief → asks questions → writes full proposal</div>
+      </div>
+    </button>
+
+    <button class="sb-scenario" onclick="selectScenario(this,'sop')">
+      <span class="sb-icon">📋</span>
+      <div class="sb-info">
+        <div class="sb-title">Build an SOP</div>
+        <div class="sb-sub">Reads process notes → structures → writes full SOP</div>
+      </div>
+    </button>
+
+    <button class="sb-scenario" onclick="selectScenario(this,'report')">
+      <span class="sb-icon">📊</span>
+      <div class="sb-info">
+        <div class="sb-title">Weekly Business Report</div>
+        <div class="sb-sub">Reads data → plans structure → writes section by section</div>
+      </div>
+    </button>
+
+    <button class="sb-scenario" onclick="selectScenario(this,'email')">
+      <span class="sb-icon">📧</span>
+      <div class="sb-info">
+        <div class="sb-title">Business Email</div>
+        <div class="sb-sub">Reads brand.md → drafts → self-critiques → delivers final</div>
+      </div>
+    </button>
+  </div>
+
+  <!-- WORKSPACE -->
+  <div class="workspace">
+    <div class="ws-toolbar">
+      <div class="ws-icon" id="wsIcon">💻</div>
+      <div class="ws-info">
+        <div class="ws-title" id="wsTitle">Claude Co-Work</div>
+        <div class="ws-sub" id="wsSub">Select a task from the left panel to begin</div>
+      </div>
+      <div class="ws-actions">
+        <button class="ws-btn" onclick="resetDemo()">Reset</button>
+        <button class="ws-btn primary" id="runBtn" onclick="startExecution()" style="display:none;">Run Task →</button>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="welcome" id="welcome">
+        <div class="welcome-icon">💻</div>
+        <h2>Claude Co-Work Execution Demo</h2>
+        <p>This simulates exactly how Claude Co-Work runs inside your computer — reading your files, asking clarifying questions, planning the task, executing each step, and producing a finished document.</p>
+        <p>Select a task from the left panel to watch it happen live.</p>
+        <div class="welcome-hint">← Choose a task to begin</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="kf">
+  <div class="kf-url">scotland2330.github.io/<span>fco-claude-guide</span>/cowork-demo.html</div>
+  <div class="kf-cta">Want this running in your business? <a href="https://www.firstclassoperations.co.uk/contact" target="_blank">Book a free call →</a></div>
+</div>
+
+<script>
+const API = 'https://8081-iqtpyss5wxucjuet9y5le-6f5676fb.us2.manus.computer/api/chat';
+
+const SCENARIOS = {
+  proposal: {
+    icon: '📝',
+    title: 'Writing a Client Proposal',
+    sub: 'Reading context files → AskUserQuestion → Planning → Executing → Document output',
+    files: [
+      { name: 'about.md', size: '3.2 KB', desc: 'Business context and background' },
+      { name: 'brand.md', size: '2.1 KB', desc: 'Tone of voice and writing style' },
+      { name: 'services.md', size: '4.7 KB', desc: 'Service offerings and pricing' },
+      { name: 'client_brief.txt', size: '1.8 KB', desc: 'Incoming client enquiry' }
+    ],
+    questions: [
+      { id: 'client_name', label: 'Client / Company Name', type: 'input', placeholder: 'e.g. Acme Manufacturing Ltd', required: true },
+      { id: 'problem', label: 'What problem are they trying to solve?', type: 'textarea', placeholder: 'e.g. They are struggling with inconsistent client onboarding — each account manager does it differently and new clients are confused', required: true },
+      { id: 'budget', label: 'Approximate budget or investment range', type: 'input', placeholder: 'e.g. £8,000–£12,000', required: false },
+      { id: 'timeline', label: 'Desired start date or urgency', type: 'input', placeholder: 'e.g. Wants to start within 4 weeks', required: false },
+      { id: 'tone', label: 'Relationship tone', type: 'select', options: ['Warm and conversational', 'Professional and formal', 'Direct and concise'], required: true }
+    ],
+    steps: [
+      { title: 'Analyse client context', desc: 'Cross-referencing brief against services and pricing structure' },
+      { title: 'Define the problem statement', desc: 'Framing the client\'s challenge in terms they\'ll recognise' },
+      { title: 'Build the proposed solution', desc: 'Matching services to the specific problem with clear rationale' },
+      { title: 'Write investment and timeline section', desc: 'Structuring pricing, phases, and deliverables' },
+      { title: 'Draft executive summary and CTA', desc: 'Opening hook and closing call to action in brand voice' }
+    ],
+    outputFile: 'proposal_acme_manufacturing.docx',
+    generatePrompt: (answers) => `Write a complete, professional client proposal for the following:
+
+Client: ${answers.client_name || 'the client'}
+Problem: ${answers.problem || 'operational inefficiency'}
+Budget: ${answers.budget || 'to be discussed'}
+Timeline: ${answers.timeline || 'flexible'}
+Tone: ${answers.tone || 'Professional and formal'}
+
+The proposal should include:
+1. Executive Summary (2 paragraphs — hook + what we're proposing)
+2. Understanding Your Challenge (restate their problem in their language)
+3. Our Proposed Approach (3-4 phases with clear deliverables for each)
+4. Investment & Timeline (structured pricing table with phases and totals)
+5. Why First Class Operations (3 specific differentiators, not generic claims)
+6. Next Steps (clear, low-friction CTA)
+
+Write it in a warm, confident, professional tone. Make it feel like it was written by a human who deeply understands their business — not a template. Use specific language from the problem description. Do NOT use: "leverage", "synergy", "game-changer", "unlock potential", or any corporate filler phrases.
+
+Format it as a complete document with proper headings, ready to send.`
+  },
+
+  sop: {
+    icon: '📋',
+    title: 'Building a Standard Operating Procedure',
+    sub: 'Reading process notes → AskUserQuestion → Planning → Writing SOP → Document output',
+    files: [
+      { name: 'about.md', size: '3.2 KB', desc: 'Business and team context' },
+      { name: 'team_structure.md', size: '1.9 KB', desc: 'Roles and responsibilities' },
+      { name: 'process_notes.txt', size: '2.4 KB', desc: 'Rough notes on current process' },
+      { name: 'tools_used.md', size: '1.1 KB', desc: 'Software and systems in use' }
+    ],
+    questions: [
+      { id: 'process_name', label: 'What process are we documenting?', type: 'input', placeholder: 'e.g. Client onboarding, invoice processing, new hire setup', required: true },
+      { id: 'trigger', label: 'What triggers this process to start?', type: 'input', placeholder: 'e.g. Contract signed, invoice raised, new employee starts', required: true },
+      { id: 'owner', label: 'Who owns this process (primary role)?', type: 'input', placeholder: 'e.g. Account Manager, Finance Manager, Operations Lead', required: true },
+      { id: 'end_state', label: 'What does "done" look like?', type: 'textarea', placeholder: 'e.g. Client has received welcome pack, folder is set up, kickoff call is booked and confirmed', required: true },
+      { id: 'pain_points', label: 'What most often goes wrong currently?', type: 'textarea', placeholder: 'e.g. Steps get skipped, no one knows who is responsible for X, it takes too long', required: false }
+    ],
+    steps: [
+      { title: 'Map the process from trigger to completion', desc: 'Identifying every step in sequence' },
+      { title: 'Assign roles and responsibilities', desc: 'RACI mapping for each step' },
+      { title: 'Define tools and templates for each step', desc: 'Linking to systems and resources' },
+      { title: 'Write the step-by-step instructions', desc: 'Clear, unambiguous language for each action' },
+      { title: 'Add quality checks and common mistakes', desc: 'Failure points and how to avoid them' }
+    ],
+    outputFile: 'sop_client_onboarding_v1.docx',
+    generatePrompt: (answers) => `Write a complete, professional Standard Operating Procedure (SOP) for the following:
+
+Process: ${answers.process_name || 'client onboarding'}
+Trigger: ${answers.trigger || 'contract signed'}
+Process Owner: ${answers.owner || 'Account Manager'}
+Definition of Done: ${answers.end_state || 'client is fully onboarded and active'}
+Known Pain Points: ${answers.pain_points || 'steps get skipped, unclear ownership'}
+
+The SOP must include:
+1. Process Overview (purpose, scope, who it applies to)
+2. Trigger & Prerequisites (what starts this, what must be in place first)
+3. Step-by-Step Process (numbered steps with: action, who does it, tool/system used, time to complete)
+4. Decision Points (if X happens, do Y — handle the most common variations)
+5. Quality Checklist (end-of-process verification checklist)
+6. Common Mistakes & How to Avoid Them (top 5 failure points)
+7. Version Control (version number, date, owner)
+
+Format it so a new team member could follow it on day one without asking questions. Use a table for the step-by-step section. Be specific — not "communicate with client" but "send the welcome email using the template in Google Drive > Templates > Client Onboarding > Welcome Email.docx".`
+  },
+
+  report: {
+    icon: '📊',
+    title: 'Weekly Business Report',
+    sub: 'Reading data files → AskUserQuestion → Planning structure → Writing section by section',
+    files: [
+      { name: 'about.md', size: '3.2 KB', desc: 'Business context and goals' },
+      { name: 'weekly_data.csv', size: '8.4 KB', desc: 'Revenue, pipeline, and activity data' },
+      { name: 'kpis.md', size: '1.6 KB', desc: 'Key metrics and targets' },
+      { name: 'last_week_report.md', size: '5.1 KB', desc: 'Previous week\'s report for comparison' }
+    ],
+    questions: [
+      { id: 'week', label: 'Week ending date', type: 'input', placeholder: 'e.g. 21 March 2026', required: true },
+      { id: 'revenue', label: 'Revenue this week (£)', type: 'input', placeholder: 'e.g. £24,500', required: true },
+      { id: 'pipeline', label: 'Active pipeline value (£)', type: 'input', placeholder: 'e.g. £187,000', required: true },
+      { id: 'wins', label: 'Key wins this week', type: 'textarea', placeholder: 'e.g. Signed Acme contract, delivered Phase 1 for TechCorp, hired new account manager', required: true },
+      { id: 'concerns', label: 'Anything to flag or watch this week?', type: 'textarea', placeholder: 'e.g. One client is behind on payment, pipeline has slowed vs last month', required: false }
+    ],
+    steps: [
+      { title: 'Calculate week-on-week performance', desc: 'Comparing revenue, pipeline, and activity vs previous week' },
+      { title: 'Identify key themes and patterns', desc: 'What the numbers are actually saying' },
+      { title: 'Write the executive summary', desc: 'One paragraph — the most important thing to know this week' },
+      { title: 'Build the metrics section', desc: 'Structured table with actuals vs targets' },
+      { title: 'Write priorities and actions for next week', desc: 'Top 3 focus areas with owners and deadlines' }
+    ],
+    outputFile: 'weekly_report_w12_2026.docx',
+    generatePrompt: (answers) => `Write a complete weekly business report for the following data:
+
+Week Ending: ${answers.week || 'this week'}
+Revenue This Week: ${answers.revenue || 'not provided'}
+Active Pipeline: ${answers.pipeline || 'not provided'}
+Key Wins: ${answers.wins || 'none specified'}
+Items to Flag: ${answers.concerns || 'none'}
+
+The report should include:
+1. Executive Summary (1 paragraph — the single most important thing to know this week, written for a founder who has 60 seconds)
+2. Performance Snapshot (table: metric | this week | last week | target | status)
+   - Include: Revenue, Pipeline Value, New Enquiries, Proposals Sent, Deals Closed, Client Satisfaction (if known)
+3. Key Wins This Week (3-5 bullet points, specific and concrete)
+4. Watch Items (anything that needs attention — risks, delays, concerns)
+5. Next Week's Top 3 Priorities (each with: what, who owns it, deadline, why it matters)
+6. One Sentence Outlook (how does next week look?)
+
+Write it in a direct, confident tone — like a trusted COO briefing the founder. No padding, no filler. Every sentence should contain information. Format it cleanly with clear sections.`
+  },
+
+  email: {
+    icon: '📧',
+    title: 'Business Email (with Self-Critique)',
+    sub: 'Reads brand.md → drafts email → critiques own draft → delivers improved final version',
+    files: [
+      { name: 'about.md', size: '3.2 KB', desc: 'Business and personal context' },
+      { name: 'brand.md', size: '2.1 KB', desc: 'Voice, tone, and writing rules' },
+      { name: 'anti_ai_style.md', size: '1.4 KB', desc: 'Phrases and patterns to never use' },
+      { name: 'email_templates.md', size: '3.8 KB', desc: 'Past emails for style reference' }
+    ],
+    questions: [
+      { id: 'recipient', label: 'Who is this email to?', type: 'input', placeholder: 'e.g. James at Acme Ltd (existing client, good relationship)', required: true },
+      { id: 'purpose', label: 'What is the email trying to achieve?', type: 'input', placeholder: 'e.g. Chase overdue invoice, deliver bad news about a delay, follow up after a meeting', required: true },
+      { id: 'context', label: 'Key context or background', type: 'textarea', placeholder: 'e.g. Invoice is 30 days overdue, this is the second time they\'ve been late, we want to maintain the relationship but need to be firm', required: true },
+      { id: 'tone', label: 'Desired tone', type: 'select', options: ['Warm but firm', 'Professional and direct', 'Apologetic but clear', 'Confident and assertive'], required: true }
+    ],
+    steps: [
+      { title: 'Read brand voice and anti-patterns', desc: 'Loading tone rules and phrases to avoid' },
+      { title: 'Draft Version 1', desc: 'First complete draft based on context and purpose' },
+      { title: 'Self-critique the draft', desc: 'Checking against voice profile — what\'s off, what\'s generic, what needs sharpening' },
+      { title: 'Rewrite based on critique', desc: 'Producing the improved final version' },
+      { title: 'Final check', desc: 'Verifying tone, length, and clarity before delivery' }
+    ],
+    outputFile: 'email_draft_final.txt',
+    generatePrompt: (answers) => `Write a professional business email, then critique it, then rewrite it based on your critique.
+
+Recipient: ${answers.recipient || 'the client'}
+Purpose: ${answers.purpose || 'follow up'}
+Context: ${answers.context || 'general follow up'}
+Tone: ${answers.tone || 'Professional and direct'}
+
+STEP 1 — DRAFT:
+Write a complete email. Subject line included. Sign off as "First Class Operations team".
+
+STEP 2 — SELF-CRITIQUE:
+After the draft, add a section titled "## Self-Critique" and honestly assess:
+- What sounds generic or AI-generated?
+- What could be more specific or personal?
+- Is the opening strong enough to get a response?
+- Is the CTA clear and low-friction?
+- Any phrases that feel corporate or hollow?
+
+STEP 3 — FINAL VERSION:
+Rewrite the email based on your critique. Title this section "## Final Version — Send This".
+
+Rules for the final version:
+- Do NOT use: "I hope this email finds you well", "Please don't hesitate", "As per my previous email", "Going forward", "circle back", "touch base", "leverage"
+- Subject line must be specific — not "Following up" or "Quick question"
+- Opening line must earn attention — not throat-clearing
+- Closing must be clear about what happens next
+- Maximum 150 words for the email body
+- Sound like a real person wrote it`
+  }
+};
+
+let currentScenario = null;
+let answers = {};
+let executionStarted = false;
+
+function selectScenario(btn, key) {
+  document.querySelectorAll('.sb-scenario').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentScenario = key;
+  answers = {};
+  executionStarted = false;
+
+  const s = SCENARIOS[key];
+  document.getElementById('wsIcon').textContent = s.icon;
+  document.getElementById('wsTitle').textContent = s.title;
+  document.getElementById('wsSub').textContent = s.sub;
+  document.getElementById('runBtn').style.display = 'none';
+
+  const stage = document.getElementById('stage');
+  stage.innerHTML = '';
+
+  // Phase 1: File reading
+  showFileReadingPhase(s.files, () => {
+    // Phase 2: AskUserQuestion
+    showAskPhase(s.questions);
+  });
+}
+
+function showFileReadingPhase(files, onComplete) {
+  const card = createPhaseCard('running', '01', 'Reading Context Files', 'Claude is scanning your folder and loading context...');
+  const stage = document.getElementById('stage');
+  stage.appendChild(card);
+
+  const fileList = document.createElement('div');
+  fileList.className = 'file-list';
+  card.querySelector('.phase-body').appendChild(fileList);
+
+  let i = 0;
+  const items = files.map(f => {
+    const el = document.createElement('div');
+    el.className = 'file-item pending';
+    el.innerHTML = `<span class="fi-icon">📄</span><span class="fi-name">${f.name}</span><span class="fi-size">${f.size}</span><span class="fi-status pending">Queued</span>`;
+    fileList.appendChild(el);
+    return el;
+  });
+
+  function readNext() {
+    if (i >= files.length) {
+      // All done
+      card.querySelector('.phase-num').className = 'phase-num done';
+      card.querySelector('.phase-num').textContent = '✓';
+      card.querySelector('.phase-label').className = 'phase-label done';
+      card.querySelector('.phase-label').textContent = 'Complete';
+      card.querySelector('.phase-header').querySelector('.phase-time').textContent = `${files.length} files loaded`;
+      setTimeout(onComplete, 500);
+      return;
+    }
+    const item = items[i];
+    item.className = 'file-item reading';
+    item.querySelector('.fi-status').className = 'fi-status reading';
+    item.querySelector('.fi-status').textContent = 'Reading...';
+    setTimeout(() => {
+      item.className = 'file-item read';
+      item.querySelector('.fi-status').className = 'fi-status read';
+      item.querySelector('.fi-status').textContent = '✓ Loaded';
+      i++;
+      setTimeout(readNext, 400 + Math.random() * 300);
+    }, 600 + Math.random() * 400);
+  }
+  setTimeout(readNext, 500);
+}
+
+function showAskPhase(questions) {
+  const stage = document.getElementById('stage');
+  const card = createPhaseCard('running', '02', 'AskUserQuestion', 'Claude needs a few details before it can begin. Fill in the form below.');
+  stage.appendChild(card);
+  stage.scrollTop = stage.scrollHeight;
+
+  const body = card.querySelector('.phase-body');
+  const form = document.createElement('div');
+  form.className = 'ask-form';
+  form.innerHTML = `
+    <div class="ask-form-header">
+      <div class="af-icon">🤖</div>
+      <div>
+        <h4>Claude is asking you questions</h4>
+        <p>This is the AskUserQuestion feature — Claude prompts you instead of guessing</p>
+      </div>
+    </div>
+    <div class="ask-fields" id="askFields"></div>
+    <div class="ask-submit">
+      <button class="ask-submit-btn" onclick="submitAnswers()">Submit & Start Execution →</button>
+      <span class="ask-submit-hint">Claude will plan and execute the task based on your answers</span>
+    </div>`;
+  body.appendChild(form);
+
+  const fieldsEl = form.querySelector('#askFields');
+  questions.forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'ask-field';
+    let input = '';
+    if (q.type === 'input') {
+      input = `<input type="text" id="q_${q.id}" placeholder="${q.placeholder}" />`;
+    } else if (q.type === 'textarea') {
+      input = `<textarea id="q_${q.id}" placeholder="${q.placeholder}"></textarea>`;
+    } else if (q.type === 'select') {
+      input = `<select id="q_${q.id}">${q.options.map(o => `<option>${o}</option>`).join('')}</select>`;
+    }
+    div.innerHTML = `<label>${q.label}${q.required ? ' <span>*</span>' : ''}</label>${input}`;
+    fieldsEl.appendChild(div);
+  });
+
+  setTimeout(() => { stage.scrollTop = stage.scrollHeight; }, 100);
+}
+
+function submitAnswers() {
+  if (!currentScenario) return;
+  const s = SCENARIOS[currentScenario];
+
+  // Collect answers
+  s.questions.forEach(q => {
+    const el = document.getElementById(`q_${q.id}`);
+    if (el) answers[q.id] = el.value.trim();
+  });
+
+  // Mark phase 2 as done
+  const cards = document.querySelectorAll('.phase-card');
+  const askCard = cards[cards.length - 1];
+  askCard.querySelector('.phase-num').className = 'phase-num done';
+  askCard.querySelector('.phase-num').textContent = '✓';
+  askCard.querySelector('.phase-label').className = 'phase-label done';
+  askCard.querySelector('.phase-label').textContent = 'Complete';
+  askCard.querySelector('.ask-submit-btn').disabled = true;
+  askCard.querySelector('.ask-submit-btn').textContent = 'Answers submitted ✓';
+
+  // Show planning phase
+  setTimeout(() => showPlanningPhase(s.steps), 600);
+}
+
+function showPlanningPhase(steps) {
+  const stage = document.getElementById('stage');
+  const card = createPhaseCard('running', '03', 'Building Task Plan', 'Claude is planning the execution sequence...');
+  stage.appendChild(card);
+  stage.scrollTop = stage.scrollHeight;
+
+  const body = card.querySelector('.phase-body');
+  const plan = document.createElement('div');
+  plan.className = 'task-plan';
+  body.appendChild(plan);
+
+  let i = 0;
+  const stepEls = [];
+
+  function addStep() {
+    if (i >= steps.length) {
+      // All steps planned
+      card.querySelector('.phase-num').className = 'phase-num done';
+      card.querySelector('.phase-num').textContent = '✓';
+      card.querySelector('.phase-label').className = 'phase-label done';
+      card.querySelector('.phase-label').textContent = `${steps.length} steps planned`;
+      setTimeout(() => showExecutionPhase(steps), 800);
+      return;
+    }
+    const s = steps[i];
+    const isLast = i === steps.length - 1;
+    const div = document.createElement('div');
+    div.className = 'tp-step';
+    div.innerHTML = `
+      <div class="tp-left">
+        <div class="tp-circle pending">${i + 1}</div>
+        ${!isLast ? '<div class="tp-line"></div>' : ''}
+      </div>
+      <div class="tp-right">
+        <div class="tp-step-title pending">${s.title}</div>
+        <div class="tp-step-desc">${s.desc}</div>
+      </div>`;
+    plan.appendChild(div);
+    stage.scrollTop = stage.scrollHeight;
+    i++;
+    setTimeout(addStep, 350);
+  }
+  setTimeout(addStep, 400);
+}
+
+function showExecutionPhase(steps) {
+  const stage = document.getElementById('stage');
+  const card = createPhaseCard('running', '04', 'Executing Task', 'Running each step in sequence...');
+  stage.appendChild(card);
+  stage.scrollTop = stage.scrollHeight;
+
+  const body = card.querySelector('.phase-body');
+  const plan = document.createElement('div');
+  plan.className = 'task-plan';
+  body.appendChild(plan);
+
+  // Build all steps as pending first
+  const stepEls = steps.map((s, i) => {
+    const isLast = i === steps.length - 1;
+    const div = document.createElement('div');
+    div.className = 'tp-step';
+    div.innerHTML = `
+      <div class="tp-left">
+        <div class="tp-circle pending">${i + 1}</div>
+        ${!isLast ? '<div class="tp-line"></div>' : ''}
+      </div>
+      <div class="tp-right">
+        <div class="tp-step-title pending">${s.title}</div>
+        <div class="tp-step-desc">${s.desc}</div>
+      </div>`;
+    plan.appendChild(div);
+    return div;
+  });
+
+  const stepOutputs = [
+    'Context loaded. Business profile, services, and pricing confirmed.',
+    'Problem statement drafted. Client language matched.',
+    'Solution structure built across 3 phases.',
+    'Investment table created. Timeline confirmed.',
+    'Executive summary written. CTA included.'
+  ];
+
+  let i = 0;
+  function runStep() {
+    if (i >= steps.length) {
+      card.querySelector('.phase-num').className = 'phase-num done';
+      card.querySelector('.phase-num').textContent = '✓';
+      card.querySelector('.phase-label').className = 'phase-label done';
+      card.querySelector('.phase-label').textContent = 'All steps complete';
+      setTimeout(() => generateOutput(), 600);
+      return;
+    }
+
+    const el = stepEls[i];
+    const circle = el.querySelector('.tp-circle');
+    const title = el.querySelector('.tp-step-title');
+    const line = el.querySelector('.tp-line');
+
+    circle.className = 'tp-circle running';
+    title.className = 'tp-step-title running';
+
+    // Add typing indicator
+    const typing = document.createElement('div');
+    typing.className = 'tp-typing';
+    typing.innerHTML = '<span></span><span></span><span></span>';
+    el.querySelector('.tp-right').appendChild(typing);
+    stage.scrollTop = stage.scrollHeight;
+
+    setTimeout(() => {
+      typing.remove();
+      circle.className = 'tp-circle done';
+      circle.textContent = '✓';
+      title.className = 'tp-step-title done';
+      if (line) line.className = 'tp-line done';
+
+      // Add output snippet
+      const out = document.createElement('div');
+      out.className = 'tp-step-output';
+      out.textContent = stepOutputs[i] || 'Step complete.';
+      el.querySelector('.tp-right').appendChild(out);
+      stage.scrollTop = stage.scrollHeight;
+
+      i++;
+      setTimeout(runStep, 500);
+    }, 1500 + Math.random() * 800);
+  }
+
+  setTimeout(runStep, 500);
+}
+
+async function generateOutput() {
+  const s = SCENARIOS[currentScenario];
+  const stage = document.getElementById('stage');
+
+  // Show generating card
+  const genCard = createPhaseCard('running', '05', 'Generating Document', 'Claude is writing the final output...');
+  stage.appendChild(genCard);
+  stage.scrollTop = stage.scrollHeight;
+
+  const body = genCard.querySelector('.phase-body');
+  const typing = document.createElement('div');
+  typing.className = 'tp-typing';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  typing.style.padding = '8px 0';
+  body.appendChild(typing);
+
+  try {
+    const prompt = s.generatePrompt(answers);
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await res.json();
+    typing.remove();
+
+    genCard.querySelector('.phase-num').className = 'phase-num done';
+    genCard.querySelector('.phase-num').textContent = '✓';
+    genCard.querySelector('.phase-label').className = 'phase-label done';
+    genCard.querySelector('.phase-label').textContent = 'Document ready';
+
+    const content = data.success ? data.reply : 'Could not generate output — please try again.';
+    showDocumentOutput(s.outputFile, content);
+
+  } catch (e) {
+    typing.remove();
+    body.innerHTML = '<p style="color:#f87171;font-size:14px;">Connection issue — please try again.</p>';
+  }
+}
+
+function showDocumentOutput(filename, content) {
+  const stage = document.getElementById('stage');
+
+  const doc = document.createElement('div');
+  doc.className = 'doc-output';
+  doc.innerHTML = `
+    <div class="doc-toolbar">
+      <div class="doc-dots"><div class="doc-dot"></div><div class="doc-dot"></div><div class="doc-dot"></div></div>
+      <div class="doc-filename">${filename}</div>
+      <div class="doc-actions">
+        <button class="doc-btn" onclick="copyDoc(this)">Copy</button>
+        <button class="doc-btn save" onclick="downloadDoc('${filename}')">Save File</button>
+      </div>
+    </div>
+    <div class="doc-content" id="docContent">${formatDoc(content)}</div>`;
+  stage.appendChild(doc);
+
+  // Completion banner
+  const banner = document.createElement('div');
+  banner.className = 'completion-banner';
+  banner.innerHTML = `
+    <div class="cb-icon">✅</div>
+    <div class="cb-body">
+      <div class="cb-title">Task complete — document ready</div>
+      <div class="cb-sub">Claude read your files, asked clarifying questions, planned the task, executed each step, and produced a finished document. Total time: under 60 seconds.</div>
+    </div>
+    <div class="cb-actions">
+      <button class="cb-btn secondary" onclick="resetDemo()">Run Another</button>
+      <a href="https://www.firstclassoperations.co.uk/contact" target="_blank" class="cb-btn primary">Get This For My Business →</a>
+    </div>`;
+  stage.appendChild(banner);
+  stage.scrollTop = stage.scrollHeight;
+}
+
+function formatDoc(text) {
+  return text
+    .replace(/```([\s\S]*?)```/g, '<pre style="background:#f6f5f2;padding:12px;border-radius:8px;font-size:12px;overflow-x:auto;margin:10px 0;">$1</pre>')
+    .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/^#{3} (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^#{2} (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^#{1} (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid rgba(0,0,0,0.08);margin:16px 0;">')
+    .replace(/^\| (.+) \|$/gm, (match) => {
+      const cells = match.split('|').filter(c => c.trim());
+      return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+    })
+    .replace(/(<tr>[\s\S]+?<\/tr>)/g, '<table>$1</table>')
+    .replace(/^[\-\*] (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[\s\S]+?<\/li>)/g, '<ul>$1</ul>')
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>');
+}
+
+function createPhaseCard(status, num, title, sub) {
+  const card = document.createElement('div');
+  card.className = 'phase-card';
+  card.innerHTML = `
+    <div class="phase-header">
+      <div class="phase-num ${status}">${status === 'done' ? '✓' : num}</div>
+      <div class="phase-label ${status}">${status === 'running' ? 'Running' : status === 'done' ? 'Complete' : 'Pending'}</div>
+      <div class="phase-title">${title}</div>
+      <div class="phase-time">${sub}</div>
+    </div>
+    <div class="phase-body"></div>`;
+  return card;
+}
+
+function copyDoc(btn) {
+  const content = document.getElementById('docContent');
+  navigator.clipboard.writeText(content.innerText).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+
+function downloadDoc(filename) {
+  const content = document.getElementById('docContent').innerText;
+  const blob = new Blob([content], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename.replace('.docx', '.txt');
+  a.click();
+}
+
+function resetDemo() {
+  currentScenario = null;
+  answers = {};
+  executionStarted = false;
+  document.querySelectorAll('.sb-scenario').forEach(b => b.classList.remove('active'));
+  document.getElementById('wsIcon').textContent = '💻';
+  document.getElementById('wsTitle').textContent = 'Claude Co-Work';
+  document.getElementById('wsSub').textContent = 'Select a task from the left panel to begin';
+  document.getElementById('runBtn').style.display = 'none';
+  document.getElementById('stage').innerHTML = `
+    <div class="welcome" id="welcome">
+      <div class="welcome-icon">💻</div>
+      <h2>Claude Co-Work Execution Demo</h2>
+      <p>This simulates exactly how Claude Co-Work runs inside your computer — reading your files, asking clarifying questions, planning the task, executing each step, and producing a finished document.</p>
+      <p>Select a task from the left panel to watch it happen live.</p>
+      <div class="welcome-hint">← Choose a task to begin</div>
+    </div>`;
+}
+</script>
+</body>
+</html>
