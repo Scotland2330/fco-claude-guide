@@ -33,10 +33,10 @@
     nav { position: sticky; top: 0; z-index: 200; background: rgba(47,46,45,0.97); backdrop-filter: blur(12px); border-bottom: 2px solid var(--cta); }
     .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
     .nav-logo img { height: 36px; filter: brightness(0) invert(1); }
-    .nav-links { display: flex; gap: 4px; list-style: none; align-items: center; }
-    .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 500; padding: 6px 12px; border-radius: 8px; transition: all 0.2s; }
+    .nav-links { display: flex; gap: 2px; list-style: none; align-items: center; flex-wrap: nowrap; }
+    .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 12px; font-weight: 500; padding: 5px 9px; border-radius: 7px; transition: all 0.2s; white-space: nowrap; }
     .nav-links a:hover { color: #fff; background: rgba(200,107,69,0.25); }
-    .nav-links .nav-cta { background: var(--cta); color: #fff !important; font-weight: 700; padding: 8px 18px; }
+    .nav-links .nav-cta { background: var(--cta); color: #fff !important; font-weight: 700; padding: 6px 14px; font-size: 12px; }
     .nav-links .nav-cta:hover { background: var(--cta-dark) !important; }
     .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
     .hamburger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; }
@@ -298,8 +298,8 @@
       <li><a href="#ai-levels">AI Levels</a></li>
       <li><a href="#responsible-use">Responsible Use</a></li>
       <li><a href="#toolkit">All Tools</a></li>
-      <li><a href="cowork-demo.html" style="color:#C86B45;font-weight:700;">💻 Co-Work Demo</a></li>
-      <li><a href="demo.html" style="color:rgba(200,107,69,0.7);font-weight:600;">▶ Chat Demo</a></li>
+      <li><a href="cowork-demo.html" style="color:#e8a07a;font-weight:700;">Co-Work Demo</a></li>
+      <li><a href="demo.html" style="color:rgba(255,255,255,0.6);font-weight:600;">Chat Demo</a></li>
       <li><a href="https://www.firstclassoperations.co.uk/contact" target="_blank" class="nav-cta">Hire Us →</a></li>
     </ul>
     <div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
@@ -328,6 +328,64 @@
 </section>
 
 <div class="sections">
+
+<!-- ===== QUICK ACCESS TABLE ===== -->
+<section class="section fade-in" id="quick-access" style="padding: 36px 48px;">
+  <div class="label">Quick Access · All Resources</div>
+  <h2 style="margin-bottom:8px;">Everything in One Place</h2>
+  <p style="color:#666; font-size:15px; margin-bottom:28px;">All live tools and pages from this guide — bookmark this table and share the main URL with your audience.</p>
+  <div style="overflow-x:auto;">
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead>
+      <tr style="background:linear-gradient(135deg,#2F2E2D,#1a1918); color:#fff;">
+        <th style="padding:12px 16px; text-align:left; border-radius:10px 0 0 0; font-weight:800; letter-spacing:0.3px;">Tool</th>
+        <th style="padding:12px 16px; text-align:left; font-weight:800;">What It Does</th>
+        <th style="padding:12px 16px; text-align:left; font-weight:800;">Best For</th>
+        <th style="padding:12px 16px; text-align:left; border-radius:0 10px 0 0; font-weight:800;">Open</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid rgba(196,183,166,0.2); background:#fff;">
+        <td style="padding:12px 16px;"><strong style="color:#2F2E2D;">📖 Main Guide</strong></td>
+        <td style="padding:12px 16px; color:#555;">Full FCO Claude Masterclass — what it is, how to start, how to build</td>
+        <td style="padding:12px 16px;"><span style="background:rgba(200,107,69,0.1);color:#C86B45;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">Everyone</span></td>
+        <td style="padding:12px 16px;"><a href="/fco-claude-guide/" target="_blank" style="color:#C86B45;font-weight:700;text-decoration:none;font-size:13px;">Open →</a></td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(196,183,166,0.2); background:#fafaf8;">
+        <td style="padding:12px 16px;"><strong style="color:#2F2E2D;">💻 Co-Work Demo</strong></td>
+        <td style="padding:12px 16px; color:#555;">Watch Claude execute a real task live — file reading, questions, plan, output</td>
+        <td style="padding:12px 16px;"><span style="background:rgba(200,107,69,0.1);color:#C86B45;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">Keynote</span></td>
+        <td style="padding:12px 16px;"><a href="cowork-demo.html" target="_blank" style="color:#C86B45;font-weight:700;text-decoration:none;font-size:13px;">Open →</a></td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(196,183,166,0.2); background:#fff;">
+        <td style="padding:12px 16px;"><strong style="color:#2F2E2D;">▶ Chat Demo</strong></td>
+        <td style="padding:12px 16px; color:#555;">9 pre-loaded business scenarios — click any to see Claude respond live on stage</td>
+        <td style="padding:12px 16px;"><span style="background:rgba(200,107,69,0.1);color:#C86B45;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">Keynote</span></td>
+        <td style="padding:12px 16px;"><a href="demo.html" target="_blank" style="color:#C86B45;font-weight:700;text-decoration:none;font-size:13px;">Open →</a></td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(196,183,166,0.2); background:#fafaf8;">
+        <td style="padding:12px 16px;"><strong style="color:#2F2E2D;">🤖 Ask the Agent</strong></td>
+        <td style="padding:12px 16px; color:#555;">Live AI chat powered by the FCO knowledge base — ask anything, get real answers</td>
+        <td style="padding:12px 16px;"><span style="background:rgba(74,222,128,0.1);color:#16a34a;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">Audience</span></td>
+        <td style="padding:12px 16px;"><a href="chat-agent.html" target="_blank" style="color:#C86B45;font-weight:700;text-decoration:none;font-size:13px;">Open →</a></td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(196,183,166,0.2); background:#fff;">
+        <td style="padding:12px 16px;"><strong style="color:#2F2E2D;">🏗 Repo Builder</strong></td>
+        <td style="padding:12px 16px; color:#555;">8-question guided builder — generates your full Claude context repo ready to upload</td>
+        <td style="padding:12px 16px;"><span style="background:rgba(74,222,128,0.1);color:#16a34a;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">Audience</span></td>
+        <td style="padding:12px 16px;"><a href="repo-builder.html" target="_blank" style="color:#C86B45;font-weight:700;text-decoration:none;font-size:13px;">Open →</a></td>
+      </tr>
+      <tr style="background:#fafaf8;">
+        <td style="padding:12px 16px; border-radius:0 0 0 10px;"><strong style="color:#2F2E2D;">⚡ File Generator</strong></td>
+        <td style="padding:12px 16px; color:#555;">Conversational agent that builds your about.md, brand.md, skills files and more</td>
+        <td style="padding:12px 16px;"><span style="background:rgba(74,222,128,0.1);color:#16a34a;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;">Audience</span></td>
+        <td style="padding:12px 16px; border-radius:0 0 10px 0;"><a href="agent.html" target="_blank" style="color:#C86B45;font-weight:700;text-decoration:none;font-size:13px;">Open →</a></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin-top:18px; font-size:13px; color:#999; text-align:center;">Share this URL with your audience: <strong style="color:#C86B45;">scotland2330.github.io/fco-claude-guide</strong> — all tools are one click away from here.</p>
+</section>
 
 <!-- ===== 1. WHAT IS CLAUDE ===== -->
 <section class="section fade-in" id="what-is-claude">
